@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings – 67 Unblocked Games</title>
+  <link rel="icon" type="image/x-icon" href="images/sixsevenlogo.png">
+  <style>
+  body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.5;
+      text-align: center;
+  }
+  h1, h2, h3, h4 {
+      color: #fff;
+      margin: 10px 0;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+  }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.2rem; color: #888; }
+  p { color: #aaa; }
+  button {
+      background-color: #111;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+  }
+  button:hover {
+      background-color: #fff;
+      color: #000;
+      border-color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+  }
+  button:active { transform: translateY(0); }
+  hr {
+      border: 0;
+      border-top: 1px solid #222;
+      margin: 30px auto;
+      width: 100%;
+  }
+  .nav-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+  }
+  .settings-section {
+      background-color: #0a0a0a;
+      border: 1px solid #222;
+      padding: 30px;
+      border-radius: 12px;
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: left;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+  .settings-section h2 { text-align: left; margin-bottom: 15px; }
+  .settings-section p { text-align: left; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="nav-container">
+    <button onclick="window.location.href='index.html';">HOME</button>
+    <button onclick="window.location.href='games.html';">GAMES</button>
+    <button onclick="window.location.href='credits.html';">CREDITS</button>
+    <button onclick="window.location.href='movies.html';">MOVIES</button>
+    <button onclick="window.location.href='chat.html';">CHAT</button>
+  </div>
+
+  <hr>
+  <h1>Settings</h1>
+  <script src="script.js"></script>
+
+  <div class="settings-section">
+    <h2>Data Management</h2>
+    <p>Export your game progress to a file or import a previously saved file.</p>
+    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+      <button onclick="exportData()" style="background-color: #28a745;">Save/Export Data</button>
+      <button onclick="document.getElementById('importFile').click()" style="background-color: #007bff;">Import Data</button>
+      <input type="file" id="importFile" style="display: none;" onchange="importData(event)" accept=".json">
+    </div>
+    <p id="statusMessage" style="display: none; text-align: center; margin-top: 10px;"></p>
+  </div>
+
+  <h2>some games do not support save file like minecraft believe it or not</h2>
+  <h3>we will soon get a list of games that dont save</h3>
+
+  <div class="settings-section">
+    <h2>Tab Cloaker</h2>
+    <p>Change the tab title and icon to look like Schoology.</p>
+    <div style="display: flex; justify-content: center;">
+      <button id="cloakButton" onclick="toggleCloak()" style="background-color: #6c757d;">Enable Cloak</button>
+    </div>
+  </div>
+
+  <h2>as of right now tab cloak does not work on games</h2>
+</body>
+</html>

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: 67-unblocked-games-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: 67-games-db
+          property: connectionString
+      - key: CORS_ORIGIN
+        # Set this to your GitHub Pages URL after first deploy
+        # Example: https://yourusername.github.io
+        value: ""
+
+databases:
+  - name: 67-games-db
+    plan: free

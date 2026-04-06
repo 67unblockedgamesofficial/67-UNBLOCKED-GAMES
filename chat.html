@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat | 67 UNBLOCKED GAMES</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.5;
+      text-align: center;
+  }
+  h1, h2, h3 { color: #fff; margin: 10px 0; font-weight: 700; letter-spacing: -0.02em; }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.1rem; color: #888; }
+  p  { color: #aaa; }
+
+  button {
+      background-color: #111;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 11px 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      outline: none;
+  }
+  button:hover { background-color: #fff; color: #000; border-color: #fff; transform: translateY(-2px); box-shadow: 0 8px 16px rgba(255,255,255,.1); }
+  button:active { transform: translateY(0); }
+  hr { border: 0; border-top: 1px solid #222; margin: 28px auto; width: 100%; }
+  input, textarea {
+      background-color: #0d0d0d;
+      color: #fff;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+  }
+  input:focus, textarea:focus { border-color: #555; }
+
+  .nav-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+
+  /* ─── Auth ─────────────────────────────────────────── */
+  #authScreen {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+  }
+  #authScreen h2 { text-align: center; margin-bottom: 6px; }
+  #authScreen p  { text-align: center; margin-bottom: 28px; }
+  .auth-tabs { display: flex; gap: 10px; margin-bottom: 24px; }
+  .auth-tab {
+      flex: 1;
+      background: #0d0d0d;
+      border: 1px solid #222;
+      color: #888;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 13px;
+      transition: all 0.2s;
+  }
+  .auth-tab.active { background: #fff; color: #000; border-color: #fff; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 6px; }
+  .btn-full { width: 100%; margin: 0; padding: 13px; font-size: 15px; }
+  .btn-green { background-color: #1a5c2e; border-color: #28a745; }
+  .btn-green:hover { background-color: #28a745; color: #fff; }
+  .btn-blue  { background-color: #0d3a5c; border-color: #007bff; }
+  .btn-blue:hover  { background-color: #007bff; color: #fff; }
+  .btn-red   { background: transparent; border-color: #555; color: #aaa; }
+  .btn-red:hover   { background: #dc3545; border-color: #dc3545; color: #fff; }
+  .err { color: #dc3545; font-size: 13px; margin-top: 10px; display: none; text-align: center; min-height: 18px; }
+
+  /* ─── Lobby ────────────────────────────────────────── */
+  #lobby { max-width: 500px; margin: 0 auto; text-align: left; display: none; }
+  #lobby h2 { text-align: center; }
+  .divider {
+      text-align: center; color: #444; margin: 20px 0;
+  }
+  .divider::before, .divider::after {
+      content: ''; display: inline-block; width: 38%; height: 1px;
+      background: #2a2a2a; vertical-align: middle; margin: 0 8px;
+  }
+  #userBadge {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #0d0d0d; border: 1px solid #222; border-radius: 10px;
+      padding: 12px 18px; margin-bottom: 24px; font-size: 14px; color: #aaa;
+  }
+  #userBadge strong { color: #fff; }
+
+  /* ─── Chat Room ─────────────────────────────────────── */
+  #chatRoom { display: none; max-width: 900px; margin: 0 auto; text-align: left; }
+  #roomHeader {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #0d0d0d; border: 1px solid #1e1e1e;
+      border-radius: 10px; padding: 14px 20px; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  }
+  #roomInfo .room-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; }
+  #roomInfo .room-code-display { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.1em; }
+  #roomInfo .owner-badge { font-size: 11px; color: #f59e0b; margin-top: 2px; }
+  #roomHeaderRight { display: flex; align-items: center; gap: 10px; }
+
+  .chat-layout { display: flex; gap: 14px; }
+  #messages {
+      flex: 1; height: 440px; overflow-y: auto;
+      background: #060606; border: 1px solid #1a1a1a;
+      border-radius: 10px; padding: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+  }
+  #messages::-webkit-scrollbar { width: 5px; }
+  #messages::-webkit-scrollbar-track { background: #0d0d0d; }
+  #messages::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+
+  /* Members sidebar */
+  #memberList {
+      width: 160px; background: #060606; border: 1px solid #1a1a1a;
+      border-radius: 10px; padding: 12px; height: 440px; overflow-y: auto; flex-shrink: 0;
+  }
+  #memberList h4 { margin: 0 0 10px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #555; }
+  .member-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 5px 4px; font-size: 13px; border-radius: 5px;
+      transition: background 0.15s;
+  }
+  .member-item:hover { background: #111; }
+  .member-name { color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .member-name.is-you { color: #4ade80; }
+  .member-name.is-owner { color: #f59e0b; }
+  .mod-btn {
+      font-size: 10px; padding: 2px 6px; margin: 0; min-width: 0;
+      background: #1a1a1a; border: 1px solid #333; color: #888;
+      border-radius: 4px; text-transform: none; letter-spacing: 0;
+  }
+  .mod-btn:hover { background: #dc3545; border-color: #dc3545; color: #fff; transform: none; box-shadow: none; }
+
+  .msg { font-size: 14px; line-height: 1.5; position: relative; padding-right: 52px; }
+  .msg .meta { font-weight: 700; margin-right: 6px; }
+  .msg .time { font-size: 11px; color: #333; margin-left: 6px; }
+  .msg-system { color: #444; font-style: italic; font-size: 12px; padding-right: 0; }
+  .msg img { max-width: 320px; max-height: 280px; border-radius: 8px; display: block; margin-top: 6px; cursor: pointer; border: 1px solid #222; }
+  .msg video { max-width: 320px; border-radius: 8px; display: block; margin-top: 6px; border: 1px solid #222; }
+
+  /* Reply button (hover) */
+  .reply-btn {
+      position: absolute; right: 4px; top: 4px;
+      opacity: 0; background: #111; border: 1px solid #2a2a2a;
+      border-radius: 6px; padding: 2px 8px; font-size: 11px; color: #666;
+      cursor: pointer; margin: 0; text-transform: none; letter-spacing: 0;
+      white-space: nowrap; transition: opacity 0.15s;
+  }
+  .msg:hover .reply-btn { opacity: 1; }
+  .reply-btn:hover { background: #222; color: #ccc; border-color: #444; transform: none; box-shadow: none; }
+
+  /* Quoted reply inside a message */
+  .reply-quote {
+      background: #0d0d0d; border-left: 3px solid #333; border-radius: 0 6px 6px 0;
+      padding: 5px 10px; margin-bottom: 5px; font-size: 12px; color: #555;
+      display: flex; gap: 6px; overflow: hidden;
+  }
+  .reply-quote .rq-author { font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+  .reply-quote .rq-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Reply bar above input */
+  #replyBar {
+      display: none; background: #0d0d0d; border: 1px solid #2a2a2a;
+      border-radius: 10px 10px 0 0; border-bottom: none;
+      padding: 8px 16px; font-size: 13px; color: #888;
+      align-items: center; gap: 10px;
+  }
+  #replyBar.open { display: flex; }
+  #replyBar .rbar-info { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  #replyBar .rbar-cancel { cursor: pointer; color: #444; font-size: 18px; line-height: 1; padding: 0 4px; transition: color 0.15s; }
+  #replyBar .rbar-cancel:hover { color: #fff; }
+
+  /* Staff badge */
+  .staff-symbol { font-style: normal; margin-right: 2px; font-size: 13px; }
+  .member-name.is-staff { color: #ff4d4d !important; }
+
+  /* Lobby action buttons */
+  #lobbyActions {
+      display: none; gap: 10px; margin: 18px 0 4px; flex-wrap: wrap;
+  }
+  #lobbyActions.visible { display: flex; }
+  .lobby-action-btn {
+      flex: 1; min-width: 140px; padding: 12px 18px; border-radius: 10px;
+      background: #0a0a1a; border: 1px solid #223; color: #99aaff;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      position: relative;
+  }
+  .lobby-action-btn:hover { background: #111; border-color: #446; transform: none; box-shadow: none; }
+  #staffReportsBtn { background: #1a0a0a; border-color: #422; color: #ff9999; }
+  #staffReportsBtn:hover { background: #1a0a0a; border-color: #944; }
+  .lobby-unread-badge {
+      position: absolute; top: -6px; right: -6px;
+      background: #ff4444; color: #fff; font-size: 11px; font-weight: 700;
+      border-radius: 50%; width: 18px; height: 18px; line-height: 18px;
+      text-align: center;
+  }
+
+  /* Report/Delete room buttons in header */
+  .room-action-btn {
+      margin: 0; padding: 9px 14px; font-size: 13px; border-radius: 7px; cursor: pointer;
+  }
+  #reportRoomBtn { background: #0a0800; border-color: #554; color: #cca; }
+  #reportRoomBtn:hover { background: #1a1200; border-color: #aa8; color: #ffd; transform: none; box-shadow: none; }
+  #deleteRoomBtn { background: #1a0000; border-color: #622; color: #f88; }
+  #deleteRoomBtn:hover { background: #2a0000; border-color: #f44; color: #faa; transform: none; box-shadow: none; }
+
+  /* Delete message button */
+  .del-msg-btn {
+      opacity: 0; background: none; border: none; color: #555; cursor: pointer;
+      font-size: 13px; padding: 2px 6px; border-radius: 4px; margin-left: 4px;
+      transition: color 0.15s, opacity 0.15s; vertical-align: middle;
+  }
+  .msg:hover .del-msg-btn { opacity: 1; }
+  .del-msg-btn:hover { color: #ff4444; transform: none; box-shadow: none; background: none; }
+
+  /* Report modal */
+  #reportModal {
+      display: none; position: fixed; inset: 0; z-index: 1100;
+      background: rgba(0,0,0,0.85); align-items: center; justify-content: center;
+  }
+  #reportModal.open { display: flex; }
+  #reportModalBox {
+      background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 14px;
+      width: 460px; max-width: 94vw; padding: 28px 28px 24px;
+  }
+  #reportModalBox h3 { margin: 0 0 14px; font-size: 17px; }
+  #reportReasonInput {
+      width: 100%; box-sizing: border-box; background: #111; border: 1px solid #2a2a2a;
+      border-radius: 8px; color: #eee; font-size: 14px; padding: 10px 14px;
+      min-height: 80px; resize: vertical; font-family: inherit; margin: 6px 0 14px;
+  }
+  .report-room-label { color: #888; font-size: 13px; margin-bottom: 4px; }
+
+  /* Staff Reports modal */
+  #reportsModal {
+      display: none; position: fixed; inset: 0; z-index: 1100;
+      background: rgba(0,0,0,0.85); align-items: center; justify-content: center;
+  }
+  #reportsModal.open { display: flex; }
+  #reportsModalBox {
+      background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 14px;
+      width: 640px; max-width: 96vw; max-height: 88vh;
+      display: flex; flex-direction: column; overflow: hidden;
+  }
+  #reportsModalHeader {
+      padding: 16px 20px; border-bottom: 1px solid #1e1e1e;
+      display: flex; align-items: center; gap: 10px;
+  }
+  #reportsModalHeader h3 { flex: 1; margin: 0; font-size: 16px; }
+  #reportsList { flex: 1; overflow-y: auto; padding: 10px 16px; }
+  .report-item {
+      background: #111; border: 1px solid #1e1e1e; border-radius: 10px;
+      padding: 14px 16px; margin: 8px 0; display: flex; flex-direction: column; gap: 6px;
+  }
+  .report-item.resolved { opacity: 0.45; }
+  .report-item-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .report-room-code {
+      background: #1a1a2a; border: 1px solid #334; color: #99aaff;
+      border-radius: 6px; padding: 3px 10px; font-size: 13px; font-weight: 700;
+  }
+  .report-by { color: #666; font-size: 12px; flex: 1; }
+  .report-reason { color: #ccc; font-size: 14px; }
+  .report-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .report-actions button { margin: 0; padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+  .btn-resolve { background: #0a1a0a; border-color: #22aa44; color: #22aa44; }
+  .btn-resolve:hover { background: #0a2a0a; transform: none; box-shadow: none; }
+  .btn-del-room { background: #1a0000; border-color: #622; color: #f88; }
+  .btn-del-room:hover { background: #2a0000; transform: none; box-shadow: none; }
+
+  /* DM inbox button */
+  #dmInboxBtn {
+      position: relative; margin: 0; padding: 10px 16px;
+      background: #0a0a1a; border: 1px solid #334; color: #99aaff;
+      font-size: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  }
+  #dmInboxBtn:hover { background: #111; border-color: #667; }
+  #dmUnreadBadge {
+      display: none; position: absolute; top: -6px; right: -6px;
+      background: #ff4444; color: #fff; font-size: 11px; font-weight: 700;
+      border-radius: 50%; width: 18px; height: 18px; line-height: 18px;
+      text-align: center;
+  }
+
+  /* DM Modal */
+  #dmModal {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
+  }
+  #dmModal.open { display: flex; }
+  #dmModalBox {
+      background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 14px;
+      width: 720px; max-width: 96vw; height: 520px; max-height: 90vh;
+      display: flex; flex-direction: column; overflow: hidden;
+  }
+  #dmModalHeader {
+      padding: 14px 18px; border-bottom: 1px solid #1e1e1e;
+      display: flex; align-items: center; gap: 10px;
+  }
+  #dmModalHeader h3 { flex: 1; margin: 0; font-size: 16px; color: #fff; }
+  #dmModalBody { display: flex; flex: 1; overflow: hidden; }
+  #dmSidebar {
+      width: 190px; border-right: 1px solid #1a1a1a; overflow-y: auto;
+      display: flex; flex-direction: column;
+  }
+  #dmSidebarSearch {
+      padding: 10px; background: #111;
+      border-bottom: 1px solid #1a1a1a; flex-shrink: 0;
+  }
+  #dmSearchInput {
+      width: 100%; box-sizing: border-box; padding: 7px 10px;
+      font-size: 13px; background: #1a1a1a; border: 1px solid #2a2a2a;
+      border-radius: 6px; color: #eee;
+  }
+  #dmConvoList { flex: 1; overflow-y: auto; }
+  .dm-convo-item {
+      padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #111;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.15s; font-size: 14px;
+  }
+  .dm-convo-item:hover, .dm-convo-item.active { background: #1a1a1a; }
+  .dm-convo-name { font-weight: 600; }
+  .dm-unread-dot {
+      background: #ff4444; color: #fff; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+  }
+  #dmMain {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+      background: #080808;
+  }
+  #dmConvoHeader {
+      padding: 10px 16px; border-bottom: 1px solid #1a1a1a;
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  #dmConvoTitle { flex: 1; font-weight: 700; font-size: 15px; }
+  #dmBlockBtn {
+      padding: 5px 12px; font-size: 12px; margin: 0; cursor: pointer;
+      border-radius: 6px; border: 1px solid #444; background: #111;
+      color: #aaa; transition: all 0.2s;
+  }
+  #dmBlockBtn:hover { background: #1a0000; border-color: #ff4444; color: #ff4444; }
+  #dmBlockBtn.blocked { border-color: #22aa44; color: #22aa44; }
+  #dmBlockBtn.blocked:hover { background: #001a00; }
+  #dmMessages {
+      flex: 1; overflow-y: auto; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 6px;
+  }
+  .dm-msg {
+      max-width: 75%; padding: 8px 12px; border-radius: 10px;
+      font-size: 14px; line-height: 1.5; word-break: break-word;
+  }
+  .dm-msg.dm-sent {
+      align-self: flex-end; background: #1a2a4a; border: 1px solid #2a4a7a;
+      color: #cce; border-radius: 10px 10px 2px 10px;
+  }
+  .dm-msg.dm-recv {
+      align-self: flex-start; background: #1a1a1a; border: 1px solid #2a2a2a;
+      color: #eee; border-radius: 10px 10px 10px 2px;
+  }
+  .dm-msg-author { font-size: 11px; color: #667; margin-bottom: 2px; font-weight: 700; }
+  .dm-msg-time { font-size: 10px; color: #444; margin-top: 3px; text-align: right; }
+  #dmInputRow {
+      padding: 10px 16px; border-top: 1px solid #1a1a1a;
+      display: flex; gap: 8px; flex-shrink: 0;
+  }
+  #dmInput {
+      flex: 1; padding: 10px 14px; font-size: 14px;
+      background: #111; border: 1px solid #2a2a2a; border-radius: 8px; color: #eee;
+  }
+  #dmInput:focus { outline: none; border-color: #446; }
+  #dmSendBtn { padding: 10px 18px; font-size: 14px; margin: 0; }
+  #dmPlaceholder {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      color: #333; font-size: 14px; flex-direction: column; gap: 8px;
+  }
+
+  #inputRow { display: flex; gap: 10px; margin-top: 12px; }
+  #messageInput { flex: 1; padding: 12px 16px; font-size: 15px; }
+  #sendBtn { padding: 12px 22px; white-space: nowrap; }
+  #uploadBtn {
+      background: #111; border: 1px solid #333; border-radius: 8px;
+      padding: 0 14px; cursor: pointer; font-size: 20px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; height: 47px;
+  }
+  #uploadBtn:hover { background: #222; border-color: #555; }
+
+  /* ─── Ban List Modal ───────────────────────────────── */
+  #banModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.85); z-index: 9998;
+      align-items: center; justify-content: center;
+  }
+  #banModal.open { display: flex; }
+  #banModalBox {
+      background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 12px;
+      padding: 28px; width: 380px; max-width: 92vw; max-height: 80vh;
+      display: flex; flex-direction: column; gap: 16px;
+  }
+  #banModalBox h3 { margin: 0; color: #f59e0b; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  #banListItems { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .ban-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #111; border: 1px solid #1e1e1e; border-radius: 8px; padding: 10px 14px;
+  }
+  .ban-item span { color: #ccc; font-size: 14px; }
+  .unban-btn {
+      background: #1a3a1a; border: 1px solid #2d6a2d; color: #4ade80;
+      border-radius: 6px; padding: 4px 12px; font-size: 12px;
+      cursor: pointer; transition: all 0.2s; margin: 0;
+      text-transform: none; letter-spacing: 0; font-weight: 600;
+  }
+  .unban-btn:hover { background: #28a745; border-color: #28a745; color: #fff; transform: none; box-shadow: none; }
+  .ban-empty { color: #444; font-size: 13px; text-align: center; padding: 20px 0; }
+  .btn-close-modal { background: transparent; border: 1px solid #333; color: #666; margin: 0; }
+  .btn-close-modal:hover { background: #222; color: #fff; border-color: #555; transform: none; box-shadow: none; }
+
+  /* ─── Emoji Autocomplete ─────────────────────────────── */
+  #emojiSuggest {
+      display: none; position: absolute; bottom: 56px; left: 0; right: 0;
+      background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 10px;
+      padding: 6px; z-index: 500; max-height: 180px; overflow-y: auto;
+      display: none; flex-wrap: wrap; gap: 4px;
+  }
+  #emojiSuggest.open { display: flex; }
+  .emoji-chip {
+      background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 6px;
+      padding: 4px 8px; font-size: 13px; cursor: pointer; color: #ccc;
+      transition: background 0.15s; white-space: nowrap;
+  }
+  .emoji-chip:hover, .emoji-chip.selected { background: #333; border-color: #555; color: #fff; }
+  #inputWrapper { position: relative; flex: 1; display: flex; }
+  #inputWrapper #messageInput { width: 100%; }
+
+  /* Image lightbox */
+  #lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.92); z-index: 9999;
+      align-items: center; justify-content: center;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 10px; }
+  #lightbox:after { content: '✕'; position: absolute; top: 20px; right: 24px; font-size: 28px; color: #666; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <div class="nav-container">
+    <button onclick="window.location.href='index.html'">HOME</button>
+    <button onclick="window.location.href='games.html'">GAMES</button>
+    <button onclick="window.location.href='settings.html'">SETTINGS</button>
+    <button onclick="window.location.href='credits.html'">CREDITS</button>
+    <button onclick="window.location.href='movies.html'">MOVIES</button>
+  </div>
+
+  <hr>
+  <h1>Chat Rooms</h1>
+  <h3>Log in, create a room, and chat in real time</h3>
+  <hr>
+
+  <!-- ─── No-Server Overlay (shown on GitHub Pages / static hosting) ─── -->
+  <div id="noServerOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:30px;text-align:center;">
+    <div style="font-size:48px;">💬</div>
+    <h2 style="margin:0;font-size:1.8rem;">Chat Requires a Server</h2>
+    <p style="color:#888;max-width:480px;margin:0;font-size:15px;line-height:1.6;">
+      The chat system uses a real-time backend (WebSocket + database) that can't run on GitHub Pages.
+      To use chat, you need to visit the full hosted version of this site.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+      <button onclick="window.location.href='index.html'" style="background:#111;border:1px solid #333;color:#fff;padding:12px 22px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">← Back to Home</button>
+    </div>
+  </div>
+
+  <!-- ─── Auth Screen ─────────────────────────────────────── -->
+  <div id="authScreen">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Login</button>
+      <button class="auth-tab" id="registerTab" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <div id="loginForm">
+      <div class="field"><label>Username</label><input type="text" id="loginUser" placeholder="Your username" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn-full btn-green" onclick="doLogin()">Login</button>
+      <div class="err" id="loginErr"></div>
+    </div>
+
+    <div id="registerForm" style="display:none">
+      <div class="field"><label>Username</label><input type="text" id="regUser" placeholder="Choose a username (letters, numbers, _)" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="regPass" placeholder="At least 4 characters" autocomplete="new-password"></div>
+      <div class="field"><label>Confirm Password</label><input type="password" id="regPass2" placeholder="Repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <button class="btn-full btn-blue" onclick="doRegister()">Create Account</button>
+      <div class="err" id="registerErr"></div>
+    </div>
+  </div>
+
+  <!-- ─── Lobby ───────────────────────────────────────────── -->
+  <div id="lobby">
+    <div id="userBadge">
+      <span>Logged in as <strong id="badgeUser"></strong></span>
+      <button class="btn-red" style="margin:0;padding:6px 14px;font-size:12px;" onclick="doLogout()">Logout</button>
+    </div>
+
+    <div id="lobbyActions">
+      <button class="lobby-action-btn" onclick="openDMModal()">
+        💬 Direct Messages
+        <span class="lobby-unread-badge" id="lobbyDmBadge" style="display:none"></span>
+      </button>
+      <button class="lobby-action-btn" id="staffReportsBtn" onclick="openReportsModal()" style="display:none;">
+        📋 Staff Reports
+      </button>
+    </div>
+
+    <div class="divider">Create a Room</div>
+    <div class="field"><label>Room Code (leave blank to auto-generate)</label><input type="text" id="createRoomInput" placeholder="e.g. GAMERS123" maxlength="20"></div>
+    <button class="btn-green btn-full" onclick="createRoom()">+ Create Room</button>
+
+    <div class="divider">Join a Room</div>
+    <div class="field"><label>Room Code</label><input type="text" id="joinRoomInput" placeholder="Enter room code..." maxlength="20" onkeydown="if(event.key==='Enter')joinRoom()"></div>
+    <button class="btn-blue btn-full" onclick="joinRoom()">Join Room</button>
+
+    <div class="err" id="lobbyErr" style="display:block;"></div>
+  </div>
+
+  <!-- ─── Chat Room ───────────────────────────────────────── -->
+  <div id="chatRoom">
+    <div id="roomHeader">
+      <div id="roomInfo">
+        <div class="room-label">Room Code — share this to invite others</div>
+        <div class="room-code-display" id="roomCodeDisplay">---</div>
+        <div class="owner-badge" id="ownerBadge" style="display:none">👑 You are the room owner</div>
+      </div>
+      <div id="roomHeaderRight">
+        <button id="dmInboxBtn" onclick="openDMModal()" style="display:none;">
+          💬 DMs <span id="dmUnreadBadge">0</span>
+        </button>
+        <button id="banListBtn" onclick="openBanList()" style="display:none;margin:0;background:#1a1000;border-color:#f59e0b;color:#f59e0b;">🚫 Ban List</button>
+        <button id="reportRoomBtn" class="room-action-btn" onclick="openReportModal()" style="display:none;">🚩 Report Room</button>
+        <button id="deleteRoomBtn" class="room-action-btn" onclick="deleteRoom()" style="display:none;">🗑️ Delete Room</button>
+        <button class="btn-red" onclick="leaveRoom()" style="margin:0;">Leave Room</button>
+      </div>
+    </div>
+
+    <div class="chat-layout">
+      <div id="messages"></div>
+      <div id="memberList">
+        <h4>Online</h4>
+        <div id="memberItems"></div>
+      </div>
+    </div>
+
+    <div id="replyBar">
+      <span class="rbar-info">↩ Replying to <strong id="replyBarUser"></strong>: <span id="replyBarMsg"></span></span>
+      <span class="rbar-cancel" onclick="cancelReply()">✕</span>
+    </div>
+    <div id="inputRow">
+      <label id="uploadBtn" title="Upload image or video">📎
+        <input type="file" id="fileInput" style="display:none" accept="image/*,video/*" onchange="uploadFile()">
+      </label>
+      <div id="inputWrapper">
+        <div id="emojiSuggest"></div>
+        <input type="text" id="messageInput" placeholder="Type a message... (use :emoji: for emojis)" maxlength="500">
+      </div>
+      <button id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Report Room Modal -->
+  <div id="reportModal" onclick="if(event.target===this)closeReportModal()">
+    <div id="reportModalBox">
+      <h3>🚩 Report Room</h3>
+      <div class="report-room-label">Room: <strong id="reportRoomCode"></strong></div>
+      <textarea id="reportReasonInput" placeholder="Describe the issue (rule violations, spam, harassment, etc.)…"></textarea>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeReportModal()" style="margin:0;background:#111;border-color:#333;color:#aaa;">Cancel</button>
+        <button onclick="submitReport()" style="margin:0;" class="btn-green">Submit Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Report Modal -->
+  <div id="userReportModal" onclick="if(event.target===this)closeUserReportModal()" style="display:none;position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;">
+    <div style="background:#0d0d0d;border:1px solid #2a2a2a;border-radius:14px;width:460px;max-width:94vw;padding:28px 28px 24px;">
+      <h3 style="margin:0 0 8px;font-size:17px;">🚩 Report User</h3>
+      <div style="color:#888;font-size:13px;margin-bottom:12px;">Reporting: <strong id="userReportTarget"></strong></div>
+      <textarea id="userReportReason" placeholder="Describe why you're reporting this user…"
+        style="width:100%;box-sizing:border-box;background:#111;border:1px solid #2a2a2a;border-radius:8px;color:#eee;font-size:14px;padding:10px 14px;min-height:80px;resize:vertical;font-family:inherit;margin-bottom:14px;"></textarea>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeUserReportModal()" style="margin:0;background:#111;border-color:#333;color:#aaa;">Cancel</button>
+        <button onclick="submitUserReport()" style="margin:0;" class="btn-green">Submit Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Staff Reports Modal -->
+  <div id="reportsModal" onclick="if(event.target===this)closeReportsModal()">
+    <div id="reportsModalBox">
+      <div id="reportsModalHeader">
+        <h3>📋 Staff Reports</h3>
+        <div style="display:flex;gap:6px;margin-left:auto;">
+          <button id="reportsTabRooms" onclick="switchReportsTab('rooms')" style="margin:0;padding:5px 12px;font-size:12px;background:#0a0a1a;border-color:#446;color:#99aaff;">🏠 Rooms</button>
+          <button id="reportsTabUsers" onclick="switchReportsTab('users')" style="margin:0;padding:5px 12px;font-size:12px;">👤 Users</button>
+          <button onclick="loadReports()" style="margin:0;padding:6px 12px;font-size:13px;">↻</button>
+          <button onclick="closeReportsModal()" style="margin:0;padding:6px 12px;font-size:16px;background:#111;border-color:#333;">✕</button>
+        </div>
+      </div>
+      <div id="reportsList">
+        <div style="padding:20px;color:#444;text-align:center;">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DM Modal -->
+  <div id="dmModal" onclick="if(event.target===this)closeDMModal()">
+    <div id="dmModalBox">
+      <div id="dmModalHeader">
+        <h3>💬 Direct Messages</h3>
+        <button onclick="openDMNewInput()" style="margin:0;padding:6px 14px;font-size:13px;">+ New DM</button>
+        <button onclick="closeDMModal()" style="margin:0;padding:6px 12px;font-size:16px;background:#111;border-color:#333;">✕</button>
+      </div>
+      <div id="dmModalBody">
+        <div id="dmSidebar">
+          <div id="dmSidebarSearch">
+            <input id="dmSearchInput" type="text" placeholder="Start new DM…"
+              oninput="filterDMConvos(this.value)"
+              onkeydown="if(event.key==='Enter')startDMFromSearch()">
+          </div>
+          <div id="dmConvoList"></div>
+        </div>
+        <div id="dmMain">
+          <div id="dmPlaceholder">
+            <span>💬</span>
+            <span>Select a conversation or start a new DM</span>
+          </div>
+          <div id="dmConvoArea" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+            <div id="dmConvoHeader">
+              <span id="dmConvoTitle"></span>
+              <button id="dmReportUserBtn" onclick="openUserReportModal()" style="margin:0;padding:5px 10px;font-size:12px;background:#0a0800;border-color:#554;color:#cca;">🚩 Report</button>
+              <button id="dmDeleteAccountBtn" onclick="staffDeleteAccount()" style="display:none;margin:0;padding:5px 10px;font-size:12px;background:#1a0000;border-color:#622;color:#f88;">🗑 Delete Account</button>
+              <button id="dmBlockBtn" onclick="toggleBlock()">Block</button>
+            </div>
+            <div id="dmMessages"></div>
+            <div id="dmInputRow">
+              <input id="dmInput" type="text" placeholder="Type a message…"
+                onkeydown="if(event.key==='Enter')sendDM()">
+              <button id="dmSendBtn" class="btn-blue" onclick="sendDM()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ban List Modal -->
+  <div id="banModal">
+    <div id="banModalBox">
+      <h3>🚫 Banned Users</h3>
+      <div id="banListItems"></div>
+      <button class="btn-close-modal" onclick="closeBanList()">Close</button>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="media">
+  </div>
+
+  <script src="chat-config.js"></script>
+  <script src="script.js"></script>
+  <script>
+  // ── Backend URL config (set via chat-config.js for GitHub Pages) ──────────────
+  const BACKEND = (window.BACKEND_URL || '').replace(/\/$/, '');
+
+  // Drop-in fetch wrapper: prepends BACKEND and adds credentials for cross-origin
+  function apiFetch(path, options = {}) {
+      if (BACKEND) options = { credentials: 'include', ...options };
+      return fetch(BACKEND + path, options);
+  }
+
+  let ws = null;
+  let presenceWs = null;
+  let myUsername = '';
+  let myRoom = '';
+  let isOwner = false;
+  let amIStaff = false;
+  let staffSet = new Set();
+  let replyingTo = null;
+
+  // ── Auth ────────────────────────────────────────────────────────────────────
+  function switchTab(tab) {
+      document.getElementById('loginForm').style.display    = tab === 'login'    ? 'block' : 'none';
+      document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('loginTab').classList.toggle('active',    tab === 'login');
+      document.getElementById('registerTab').classList.toggle('active', tab === 'register');
+  }
+
+  function showAuthErr(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
+  }
+
+  async function doLogin() {
+      const username = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPass').value;
+      if (!username || !password) return showAuthErr('loginErr', 'Fill in all fields.');
+      try {
+          const r = await apiFetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
+          const d = await r.json();
+          if (!r.ok) return showAuthErr('loginErr', d.error);
+          enterLobby(d.username);
+      } catch { showAuthErr('loginErr', 'Connection error.'); }
+  }
+
+  async function doRegister() {
+      const username = document.getElementById('regUser').value.trim();
+      const password = document.getElementById('regPass').value;
+      const confirm  = document.getElementById('regPass2').value;
+      if (!username || !password || !confirm) return showAuthErr('registerErr', 'Fill in all fields.');
+      if (password !== confirm) return showAuthErr('registerErr', 'Passwords do not match.');
+      try {
+          const r = await apiFetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
+          const d = await r.json();
+          if (!r.ok) return showAuthErr('registerErr', d.error);
+          enterLobby(d.username);
+      } catch { showAuthErr('registerErr', 'Connection error.'); }
+  }
+
+  async function doLogout() {
+      await apiFetch('/api/logout', { method: 'POST' });
+      myUsername = '';
+      if (presenceWs) { presenceWs.close(); presenceWs = null; }
+      document.getElementById('lobbyActions').classList.remove('visible');
+      document.getElementById('lobby').style.display = 'none';
+      document.getElementById('authScreen').style.display = 'block';
+  }
+
+  function enterLobby(username) {
+      myUsername = username;
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('badgeUser').textContent = username;
+      document.getElementById('lobby').style.display = 'block';
+      document.getElementById('lobbyActions').classList.add('visible');
+      // Open presence WS for real-time DM delivery in the lobby
+      openPresenceWs();
+      // Load DM unread count + check staff status
+      loadDMConversations().then(() => {
+          const badge = document.getElementById('lobbyDmBadge');
+          if (dmTotalUnread > 0) {
+              badge.textContent = dmTotalUnread;
+              badge.style.display = 'inline-block';
+          }
+      });
+      apiFetch('/api/staff').then(r => r.json()).then(list => {
+          staffSet = new Set(list);
+          amIStaff = list.includes(myUsername);
+          if (amIStaff) document.getElementById('staffReportsBtn').style.display = 'flex';
+      }).catch(() => {});
+  }
+
+  function openPresenceWs() {
+      if (presenceWs && presenceWs.readyState <= 1) presenceWs.close();
+      presenceWs = new WebSocket(getWsUrl());
+      presenceWs.onopen = () => {
+          presenceWs.send(JSON.stringify({ type: 'presence', username: myUsername }));
+      };
+      presenceWs.onmessage = (event) => {
+          try {
+              const data = JSON.parse(event.data);
+              if (data.type === 'dm') handleIncomingDM(data);
+          } catch {}
+      };
+      presenceWs.onclose = () => {};
+  }
+
+  // Check if already logged in on page load
+  // Also detects if this page is running without a backend (e.g. GitHub Pages)
+  (async () => {
+      try {
+          const r = await apiFetch('/api/me');
+          // If we get any HTTP response the server is up
+          if (r.ok) {
+              const d = await r.json();
+              enterLobby(d.username);
+          }
+          // 401 = not logged in, server IS running — auth screen is already visible, do nothing
+      } catch (e) {
+          // Network error = no backend available (GitHub Pages / static hosting)
+          document.getElementById('noServerOverlay').style.display = 'flex';
+          document.getElementById('authScreen').style.display = 'none';
+      }
+  })();
+
+  // ── Lobby ────────────────────────────────────────────────────────────────────
+  function genCode() { return Math.random().toString(36).substring(2,8).toUpperCase(); }
+
+  function showLobbyErr(msg) {
+      const el = document.getElementById('lobbyErr');
+      el.textContent = msg;
+      el.style.color = '#dc3545';
+      setTimeout(() => el.textContent = '', 4000);
+  }
+
+  async function createRoom() {
+      const code = document.getElementById('createRoomInput').value.trim().toUpperCase() || '';
+      try {
+          const r = await apiFetch('/api/create-room', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ roomCode: code })
+          });
+          const d = await r.json();
+          if (!r.ok) return showLobbyErr(d.error);
+          connect(d.roomCode);
+      } catch { showLobbyErr('Connection error. Please try again.'); }
+  }
+
+  function joinRoom() {
+      const code = document.getElementById('joinRoomInput').value.trim().toUpperCase();
+      if (!code) return showLobbyErr('Enter a room code.');
+      connect(code);
+  }
+
+  // ── WebSocket ─────────────────────────────────────────────────────────────────
+  function getWsUrl() {
+      if (BACKEND) {
+          // Convert https → wss, http → ws
+          return BACKEND.replace(/^https/, 'wss').replace(/^http(?!s)/, 'ws');
+      }
+      return `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`;
+  }
+
+  function connect(roomCode) {
+      // Close presence WS — room WS will handle DM delivery while in room
+      if (presenceWs) { presenceWs.close(); presenceWs = null; }
+      if (ws) ws.close();
+      ws = new WebSocket(getWsUrl());
+
+      ws.onopen = () => {
+          ws.send(JSON.stringify({ type: 'join', roomCode, username: myUsername }));
+      };
+
+      ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          if (data.type === 'joined')  { handleJoined(data); }
+          else if (data.type === 'message') { appendMessage(data); }
+          else if (data.type === 'system')  { appendSystem(data.message); updateMembers(data.members); }
+          else if (data.type === 'error')   { showLobbyErr(data.message); ws.close(); }
+          else if (data.type === 'kicked')  {
+              appendSystem(data.message);
+              setTimeout(() => { ws.close(); leaveRoom(); showLobbyErr(data.message); }, 1200);
+          }
+          else if (data.type === 'unban_success') {
+              appendSystem(`✅ ${data.target} has been unbanned.`);
+              renderBanList();
+          }
+          else if (data.type === 'dm') { handleIncomingDM(data); }
+          else if (data.type === 'dm_error') { appendSystem(`⚠️ DM: ${data.message}`); }
+          else if (data.type === 'message_deleted') { removeMessageFromDOM(data.messageId); }
+      };
+
+      ws.onclose = () => { if (myRoom) appendSystem('Disconnected.'); };
+      ws.onerror = () => showLobbyErr('Connection error. Please try again.');
+  }
+
+  async function handleJoined(data) {
+      myRoom    = data.roomCode;
+      isOwner   = data.isOwner;
+      amIStaff  = data.isStaff;
+
+      // Fetch staff list for name coloring
+      try {
+          const sr = await apiFetch('/api/staff');
+          if (sr.ok) staffSet = new Set(await sr.json());
+      } catch {}
+
+      document.getElementById('lobby').style.display    = 'none';
+      document.getElementById('chatRoom').style.display = 'block';
+      document.getElementById('roomCodeDisplay').textContent = myRoom;
+      document.getElementById('ownerBadge').style.display  = isOwner ? 'block' : 'none';
+      document.getElementById('banListBtn').style.display    = (isOwner || amIStaff) ? 'block' : 'none';
+      document.getElementById('dmInboxBtn').style.display    = 'block';
+      document.getElementById('reportRoomBtn').style.display = 'block';
+      document.getElementById('deleteRoomBtn').style.display = (isOwner || amIStaff) ? 'block' : 'none';
+      document.getElementById('messages').innerHTML = '';
+      // Load initial unread count
+      loadDMConversations();
+
+      updateMembers(data.members);
+      await loadHistory(myRoom);
+      document.getElementById('messageInput').focus();
+  }
+
+  // ── Members ──────────────────────────────────────────────────────────────────
+  function updateMembers(members) {
+      if (!members) return;
+      const container = document.getElementById('memberItems');
+      container.innerHTML = '';
+      members.forEach(uname => {
+          const div = document.createElement('div');
+          div.className = 'member-item';
+          const nameSpan = document.createElement('span');
+          const isStaffMember = staffSet.has(uname);
+          nameSpan.className = 'member-name' +
+              (uname === myUsername ? ' is-you' : '') +
+              (isStaffMember ? ' is-staff' : '');
+          nameSpan.style.color = getUserColor(uname);
+          nameSpan.innerHTML = (isStaffMember ? '<em class="staff-symbol">🔨</em>' : '') + esc(uname);
+          div.appendChild(nameSpan);
+          if (uname !== myUsername) {
+              const dmBtn = document.createElement('button');
+              dmBtn.className = 'mod-btn';
+              dmBtn.style.cssText = 'background:#0a0a1a;border-color:#334;color:#99aaff;';
+              dmBtn.textContent = '💬';
+              dmBtn.title = `DM ${uname}`;
+              dmBtn.onclick = () => openDMWithMember(uname);
+              div.appendChild(dmBtn);
+          }
+          if ((isOwner || amIStaff) && uname !== myUsername) {
+              const modBtn = document.createElement('button');
+              modBtn.className = 'mod-btn';
+              modBtn.textContent = 'kick/ban';
+              modBtn.onclick = () => showModMenu(uname);
+              div.appendChild(modBtn);
+          }
+          container.appendChild(div);
+      });
+  }
+
+  function showModMenu(target) {
+      const kick = confirm(`Manage "${target}"\n\nOK = Kick (can rejoin)\nCancel = Permanently ban`);
+      if (kick) {
+          kickUser(target);
+      } else {
+          if (confirm(`Permanently ban "${target}" from this room?`)) banUser(target);
+      }
+  }
+
+  function kickUser(target) {
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'kick', target }));
+  }
+
+  function banUser(target) {
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ban', target }));
+  }
+
+  // ── Ban List ──────────────────────────────────────────────────────────────────
+  async function openBanList() {
+      document.getElementById('banModal').classList.add('open');
+      await renderBanList();
+  }
+
+  function closeBanList() {
+      document.getElementById('banModal').classList.remove('open');
+  }
+
+  async function renderBanList() {
+      const container = document.getElementById('banListItems');
+      container.innerHTML = '<div class="ban-empty">Loading...</div>';
+      try {
+          const r = await apiFetch(`/api/room/${myRoom}/bans`);
+          const list = await r.json();
+          if (!r.ok) { container.innerHTML = `<div class="ban-empty">${esc(list.error)}</div>`; return; }
+          if (list.length === 0) {
+              container.innerHTML = '<div class="ban-empty">No banned users in this room.</div>';
+              return;
+          }
+          container.innerHTML = '';
+          list.forEach(username => {
+              const item = document.createElement('div');
+              item.className = 'ban-item';
+              item.innerHTML = `<span>${esc(username)}</span>`;
+              const btn = document.createElement('button');
+              btn.className = 'unban-btn';
+              btn.textContent = 'Unban';
+              btn.onclick = () => unbanUser(username);
+              item.appendChild(btn);
+              container.appendChild(item);
+          });
+      } catch {
+          container.innerHTML = '<div class="ban-empty">Failed to load ban list.</div>';
+      }
+  }
+
+  function unbanUser(target) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'unban', target }));
+      }
+  }
+
+  // ── Messages ──────────────────────────────────────────────────────────────────
+  async function loadHistory(roomCode) {
+      try {
+          const r = await apiFetch(`/api/messages/${roomCode}`);
+          const msgs = await r.json();
+          if (msgs.length) {
+              appendSystem('— previous messages —');
+              msgs.forEach(m => appendMessage({
+                  id: m.id,
+                  username: m.username,
+                  message: m.message,
+                  mediaUrl: m.media_url,
+                  mediaType: m.media_type,
+                  replyToUsername: m.reply_to_username,
+                  replyToMessage: m.reply_to_message,
+                  time: new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                  historical: true
+              }));
+              appendSystem('— live —');
+          }
+      } catch(e) { console.error(e); }
+  }
+
+  function appendMessage(data) {
+      const box = document.getElementById('messages');
+      const div = document.createElement('div');
+      const isMe = data.username === myUsername && !data.historical;
+      div.className = `msg${isMe ? ' msg-you' : ''}`;
+
+      if (data.id) div.dataset.msgId = data.id;
+
+      const color = getUserColor(data.username);
+      const isStaffMember = staffSet.has(data.username);
+      const symbol = isStaffMember ? '<em class="staff-symbol">🔨</em>' : '';
+      const namePart = `<span class="meta" style="color:${color}">${symbol}${esc(data.username)}</span>`;
+
+      // Reply quote block
+      let replyPart = '';
+      if (data.replyToUsername) {
+          const rColor = getUserColor(data.replyToUsername);
+          replyPart = `<div class="reply-quote">
+              <span class="rq-author" style="color:${rColor}">${esc(data.replyToUsername)}</span>
+              <span class="rq-text">${parseEmojis(esc(data.replyToMessage || ''))}</span>
+          </div>`;
+      }
+
+      let inner = replyPart + namePart;
+      if (data.message) inner += parseEmojis(esc(data.message));
+      if (data.mediaUrl) {
+          if (data.mediaType === 'video') {
+              inner += `<video controls src="${esc(data.mediaUrl)}"></video>`;
+          } else {
+              inner += `<img src="${esc(data.mediaUrl)}" alt="image" onclick="openLightbox('${esc(data.mediaUrl)}')">`;
+          }
+      }
+      if (data.time) inner += `<span class="time">${data.time}</span>`;
+      div.innerHTML = inner;
+
+      // Reply button
+      if (!data.historical) {
+          const replyBtn = document.createElement('button');
+          replyBtn.className = 'reply-btn';
+          replyBtn.textContent = '↩ Reply';
+          replyBtn.addEventListener('click', () => startReply(data.username, data.message || '[media]'));
+          div.appendChild(replyBtn);
+      }
+      // Delete button (staff or message author)
+      if (data.id && (amIStaff || data.username === myUsername)) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'del-msg-btn';
+          delBtn.title = 'Delete message';
+          delBtn.textContent = '🗑';
+          delBtn.addEventListener('click', () => deleteMessage(data.id));
+          div.appendChild(delBtn);
+      }
+
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+  }
+
+  function appendSystem(text) {
+      const box = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'msg msg-system';
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+  }
+
+  function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const raw = input.value.trim();
+      if (!raw || !ws || ws.readyState !== WebSocket.OPEN) return;
+
+      // Slash commands
+      if (raw.startsWith('/')) {
+          const parts = raw.split(/\s+/);
+          const cmd = parts[0].toLowerCase();
+          const arg = parts.slice(1).join(' ').trim();
+          input.value = '';
+
+          if (cmd === '/unban') {
+              if (!isOwner && !amIStaff) return appendSystem('Only owners/staff can unban.');
+              if (!arg) return appendSystem('Usage: /unban <username>');
+              ws.send(JSON.stringify({ type: 'unban', target: arg }));
+          } else if (cmd === '/kick') {
+              if (!isOwner && !amIStaff) return appendSystem('Only owners/staff can kick.');
+              if (!arg) return appendSystem('Usage: /kick <username>');
+              kickUser(arg);
+          } else if (cmd === '/ban') {
+              if (!isOwner && !amIStaff) return appendSystem('Only owners/staff can ban.');
+              if (!arg) return appendSystem('Usage: /ban <username>');
+              banUser(arg);
+          } else if (cmd === '/staff') {
+              if (!amIStaff) return appendSystem('Only staff can assign other staff.');
+              if (!arg) return appendSystem('Usage: /staff <username>');
+              assignStaff(arg);
+          } else {
+              const cmds = (isOwner || amIStaff) ? '/kick, /ban, /unban, /staff' : '(no commands available)';
+              appendSystem(`Unknown command: ${cmd}. Available: ${cmds}`);
+          }
+          return;
+      }
+
+      const payload = { type: 'message', message: raw };
+      if (replyingTo) {
+          payload.replyToUsername = replyingTo.username;
+          payload.replyToMessage  = replyingTo.message;
+      }
+      ws.send(JSON.stringify(payload));
+      input.value = '';
+      cancelReply();
+  }
+
+  // ── Username Color System (Roblox-style deterministic HSL) ───────────────────
+  function getUserColor(username) {
+      const STAFF_NAMES = ['Loafyen'];
+      if (!username) return '#ffffff';
+      if (staffSet.has(username) || STAFF_NAMES.includes(username)) return '#ff4444';
+      // Hash username to a number
+      let hash = 0;
+      for (let i = 0; i < username.length; i++) {
+          hash = (Math.imul(31, hash) + username.charCodeAt(i)) | 0;
+      }
+      const hue = Math.abs(hash) % 360;
+      // Avoid red hues (330-360, 0-15) to keep staff red distinct
+      const adjustedHue = (hue >= 0 && hue <= 15) || (hue >= 330 && hue <= 360)
+          ? (hue + 30) % 360
+          : hue;
+      return `hsl(${adjustedHue}, 75%, 65%)`;
+  }
+
+  // ── Reply System ─────────────────────────────────────────────────────────────
+  function startReply(username, message) {
+      replyingTo = { username, message };
+      const bar = document.getElementById('replyBar');
+      bar.classList.add('open');
+      document.getElementById('replyBarUser').textContent = username;
+      document.getElementById('replyBarMsg').textContent = message.length > 80 ? message.slice(0, 80) + '…' : message;
+      document.getElementById('messageInput').focus();
+  }
+
+  function cancelReply() {
+      replyingTo = null;
+      document.getElementById('replyBar').classList.remove('open');
+  }
+
+  // ── Staff Assignment ──────────────────────────────────────────────────────────
+  async function assignStaff(username) {
+      try {
+          const r = await apiFetch('/api/staff/assign', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username })
+          });
+          if (r.ok) {
+              staffSet.add(username);
+              appendSystem(`⚡ ${username} has been made staff.`);
+              updateMembers(Array.from(document.querySelectorAll('.member-name'))
+                  .map(el => el.textContent.replace('⚡', '').trim()));
+          } else {
+              const d = await r.json();
+              appendSystem('Staff assign failed: ' + (d.error || 'unknown error'));
+          }
+      } catch(e) {
+          appendSystem('Error assigning staff.');
+      }
+  }
+
+  // ── DM System ────────────────────────────────────────────────────────────────
+  let dmCurrentUser  = null;   // who we're currently viewing
+  let dmBlockedSet   = new Set(); // users I have blocked
+  let dmConvos       = [];     // cached conversation list
+  let dmTotalUnread  = 0;
+
+  async function openDMModal() {
+      document.getElementById('dmModal').classList.add('open');
+      await loadDMConversations();
+  }
+
+  function closeDMModal() {
+      document.getElementById('dmModal').classList.remove('open');
+  }
+
+  async function loadDMConversations() {
+      try {
+          const [convRes, blockRes] = await Promise.all([
+              apiFetch('/api/dm/conversations'),
+              apiFetch('/api/blocks')
+          ]);
+          dmConvos = convRes.ok ? await convRes.json() : [];
+          const blocks = blockRes.ok ? await blockRes.json() : [];
+          dmBlockedSet = new Set(blocks);
+          renderDMConvoList(dmConvos);
+
+          dmTotalUnread = dmConvos.reduce((s, c) => s + (c.unread || 0), 0);
+          updateDMBadge();
+      } catch(e) { console.error(e); }
+  }
+
+  function renderDMConvoList(convos) {
+      const list = document.getElementById('dmConvoList');
+      list.innerHTML = '';
+      if (!convos.length) {
+          list.innerHTML = '<div style="padding:14px;color:#444;font-size:13px;text-align:center;">No conversations yet</div>';
+          return;
+      }
+      convos.forEach(c => {
+          const div = document.createElement('div');
+          div.className = 'dm-convo-item' + (dmCurrentUser === c.other_user ? ' active' : '');
+          div.dataset.user = c.other_user;
+          const color = getUserColor(c.other_user);
+          const isStaffMember = staffSet.has(c.other_user);
+          div.innerHTML = `
+              <span class="dm-convo-name" style="color:${color}">
+                  ${isStaffMember ? '<em class="staff-symbol">⚡</em>' : ''}${esc(c.other_user)}
+              </span>
+              ${c.unread > 0 ? `<span class="dm-unread-dot">${c.unread}</span>` : ''}
+          `;
+          div.addEventListener('click', () => openDMWith(c.other_user));
+          list.appendChild(div);
+      });
+  }
+
+  async function openDMWith(username) {
+      dmCurrentUser = username;
+      // Highlight active convo
+      document.querySelectorAll('.dm-convo-item').forEach(el => {
+          el.classList.toggle('active', el.dataset.user === username);
+      });
+      // Mark that convo as read locally
+      const convo = dmConvos.find(c => c.other_user === username);
+      if (convo && convo.unread > 0) {
+          dmTotalUnread = Math.max(0, dmTotalUnread - convo.unread);
+          convo.unread = 0;
+          updateDMBadge();
+          renderDMConvoList(dmConvos);
+      }
+
+      const color = getUserColor(username);
+      document.getElementById('dmConvoTitle').innerHTML =
+          `<span style="color:${color}">${esc(username)}</span>`;
+
+      // Update block button
+      const blocked = dmBlockedSet.has(username);
+      const blockBtn = document.getElementById('dmBlockBtn');
+      blockBtn.textContent = blocked ? '✓ Unblock' : 'Block';
+      blockBtn.className   = blocked ? 'blocked' : '';
+      // Show staff delete button only for staff
+      document.getElementById('dmDeleteAccountBtn').style.display = amIStaff ? 'inline-flex' : 'none';
+
+      document.getElementById('dmPlaceholder').style.display = 'none';
+      const area = document.getElementById('dmConvoArea');
+      area.style.display = 'flex';
+
+      // Load messages
+      const msgBox = document.getElementById('dmMessages');
+      msgBox.innerHTML = '<div style="color:#444;font-size:13px;text-align:center;padding:20px;">Loading…</div>';
+
+      try {
+          const r = await apiFetch(`/api/dm/${encodeURIComponent(username)}`);
+          if (r.status === 403) {
+              const d = await r.json();
+              msgBox.innerHTML = `<div style="color:#ff4444;text-align:center;padding:20px;">
+                  🚫 ${d.blocker === myUsername ? 'You have blocked this user.' : 'This user has blocked you.'}
+              </div>`;
+              document.getElementById('dmInput').disabled = true;
+              document.getElementById('dmSendBtn').disabled = true;
+              return;
+          }
+          const msgs = r.ok ? await r.json() : [];
+          document.getElementById('dmInput').disabled = false;
+          document.getElementById('dmSendBtn').disabled = false;
+          msgBox.innerHTML = '';
+          msgs.forEach(m => appendDMMessage(m.from_username, m.message,
+              new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })));
+          msgBox.scrollTop = msgBox.scrollHeight;
+          document.getElementById('dmInput').focus();
+      } catch(e) {
+          msgBox.innerHTML = '<div style="color:#f44;text-align:center;padding:20px;">Failed to load messages.</div>';
+      }
+  }
+
+  function appendDMMessage(fromUsername, message, time) {
+      const box = document.getElementById('dmMessages');
+      const isMe = fromUsername === myUsername;
+      const div = document.createElement('div');
+      div.className = 'dm-msg ' + (isMe ? 'dm-sent' : 'dm-recv');
+      div.innerHTML = `
+          <div class="dm-msg-author" style="color:${getUserColor(fromUsername)}">${esc(fromUsername)}</div>
+          <div>${parseEmojis(esc(message))}</div>
+          <div class="dm-msg-time">${esc(time)}</div>
+      `;
+      box.appendChild(div);
+  }
+
+  function getActiveWs() {
+      if (ws && ws.readyState === WebSocket.OPEN) return ws;
+      if (presenceWs && presenceWs.readyState === WebSocket.OPEN) return presenceWs;
+      return null;
+  }
+
+  function sendDM() {
+      const input = document.getElementById('dmInput');
+      const msg = input.value.trim();
+      const sock = getActiveWs();
+      if (!msg || !dmCurrentUser || !sock) return;
+      sock.send(JSON.stringify({ type: 'dm', target: dmCurrentUser, message: msg }));
+      input.value = '';
+  }
+
+  function handleIncomingDM(data) {
+      const other = data.from === myUsername ? data.to : data.from;
+
+      // Update conversation list
+      let convo = dmConvos.find(c => c.other_user === other);
+      if (!convo) {
+          convo = { other_user: other, unread: 0 };
+          dmConvos.unshift(convo);
+      } else {
+          dmConvos = [convo, ...dmConvos.filter(c => c.other_user !== other)];
+      }
+
+      // If modal is open and we're viewing this convo, append the message
+      const modalOpen = document.getElementById('dmModal').classList.contains('open');
+      if (modalOpen && dmCurrentUser === other) {
+          appendDMMessage(data.from, data.message, data.time);
+          document.getElementById('dmMessages').scrollTop = 9999;
+      } else if (data.from !== myUsername) {
+          // Increment unread for incoming messages when not viewing
+          convo.unread = (convo.unread || 0) + 1;
+          dmTotalUnread++;
+          updateDMBadge();
+          if (modalOpen) renderDMConvoList(dmConvos);
+      }
+      if (modalOpen) renderDMConvoList(dmConvos);
+  }
+
+  function updateDMBadge() {
+      const badge = document.getElementById('dmUnreadBadge');
+      if (!badge) return;
+      if (dmTotalUnread > 0) {
+          badge.style.display = 'inline-block';
+          badge.textContent = dmTotalUnread;
+      } else {
+          badge.style.display = 'none';
+      }
+  }
+
+  async function toggleBlock() {
+      if (!dmCurrentUser) return;
+      const blocked = dmBlockedSet.has(dmCurrentUser);
+      const method  = blocked ? 'DELETE' : 'POST';
+      try {
+          const r = await apiFetch(`/api/block/${encodeURIComponent(dmCurrentUser)}`, { method });
+          if (r.ok) {
+              if (blocked) { dmBlockedSet.delete(dmCurrentUser); }
+              else         { dmBlockedSet.add(dmCurrentUser); }
+              // Re-open to refresh the view
+              await openDMWith(dmCurrentUser);
+          }
+      } catch(e) { console.error(e); }
+  }
+
+  function openDMNewInput() {
+      const el = document.getElementById('dmSearchInput');
+      el.value = '';
+      el.focus();
+      filterDMConvos('');
+  }
+
+  function filterDMConvos(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) { renderDMConvoList(dmConvos); return; }
+      const filtered = dmConvos.filter(c => c.other_user.toLowerCase().includes(q));
+      renderDMConvoList(filtered);
+  }
+
+  function startDMFromSearch() {
+      const val = document.getElementById('dmSearchInput').value.trim();
+      if (!val || val === myUsername) return;
+      openDMWith(val);
+      document.getElementById('dmSearchInput').value = '';
+  }
+
+  // Member list DM button helper
+  function openDMWithMember(username) {
+      openDMModal().then(() => openDMWith(username));
+  }
+
+  // ── File Upload ───────────────────────────────────────────────────────────────
+  async function uploadFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('file', file);
+
+      appendSystem('Uploading...');
+      try {
+          const r = await apiFetch('/api/upload', { method: 'POST', body: formData });
+          const d = await r.json();
+          if (!r.ok) return appendSystem('Upload failed: ' + d.error);
+          if (ws && ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify({ type: 'message', message: '', mediaUrl: d.url, mediaType: d.mediaType }));
+          }
+      } catch(e) {
+          appendSystem('Upload error.');
+      }
+      document.getElementById('fileInput').value = '';
+  }
+
+  // ── Leave ─────────────────────────────────────────────────────────────────────
+  function leaveRoom() {
+      if (ws) { ws.close(); ws = null; }
+      myRoom = ''; isOwner = false;
+      document.getElementById('messages').innerHTML = '';
+      document.getElementById('chatRoom').style.display = 'none';
+      document.getElementById('reportRoomBtn').style.display = 'none';
+      document.getElementById('deleteRoomBtn').style.display = 'none';
+      document.getElementById('lobby').style.display = 'block';
+      // Re-open presence WS for DM delivery while in lobby
+      if (myUsername) openPresenceWs();
+  }
+
+  // ── Report Room ───────────────────────────────────────────────────────────────
+  function openReportModal() {
+      document.getElementById('reportRoomCode').textContent = myRoom;
+      document.getElementById('reportReasonInput').value = '';
+      document.getElementById('reportModal').classList.add('open');
+  }
+  function closeReportModal() {
+      document.getElementById('reportModal').classList.remove('open');
+  }
+  async function submitReport() {
+      const reason = document.getElementById('reportReasonInput').value.trim();
+      if (!reason) return appendSystem('Please enter a reason for the report.');
+      try {
+          const r = await apiFetch(`/api/room/${myRoom}/report`, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reason })
+          });
+          const d = await r.json();
+          if (!r.ok) { appendSystem('⚠️ Report failed: ' + d.error); return; }
+          appendSystem('🚩 Room reported. Thank you — staff will review it.');
+          closeReportModal();
+      } catch(e) { appendSystem('Report error.'); }
+  }
+
+  // ── Delete Room ───────────────────────────────────────────────────────────────
+  async function deleteRoom() {
+      if (!myRoom) return;
+      if (!confirm(`Delete room "${myRoom}"? This cannot be undone.`)) return;
+      try {
+          const r = await apiFetch(`/api/room/${myRoom}`, { method: 'DELETE' });
+          const d = await r.json();
+          if (!r.ok) { appendSystem('⚠️ ' + d.error); return; }
+          appendSystem('🗑️ Room deleted.');
+          leaveRoom();
+      } catch(e) { appendSystem('Error deleting room.'); }
+  }
+
+  // ── Delete Message ────────────────────────────────────────────────────────────
+  function deleteMessage(msgId) {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      ws.send(JSON.stringify({ type: 'delete_message', messageId: msgId }));
+  }
+  function removeMessageFromDOM(msgId) {
+      const el = document.querySelector(`[data-msg-id="${msgId}"]`);
+      if (el) el.remove();
+  }
+
+  // ── Staff Reports Modal ───────────────────────────────────────────────────────
+  let currentReportsTab = 'rooms';
+
+  function openReportsModal() {
+      document.getElementById('reportsModal').classList.add('open');
+      switchReportsTab('rooms');
+  }
+  function closeReportsModal() {
+      document.getElementById('reportsModal').classList.remove('open');
+  }
+  function switchReportsTab(tab) {
+      currentReportsTab = tab;
+      const tRooms = document.getElementById('reportsTabRooms');
+      const tUsers = document.getElementById('reportsTabUsers');
+      const activeStyle = 'background:#0a0a1a;border-color:#446;color:#99aaff;';
+      const inactiveStyle = 'background:#0d0d0d;border-color:#222;color:#666;';
+      tRooms.style.cssText = (tab === 'rooms' ? activeStyle : inactiveStyle) + 'margin:0;padding:5px 12px;font-size:12px;';
+      tUsers.style.cssText = (tab === 'users' ? activeStyle : inactiveStyle) + 'margin:0;padding:5px 12px;font-size:12px;';
+      loadReports();
+  }
+  async function loadReports() {
+      if (currentReportsTab === 'rooms') await loadRoomReports();
+      else await loadUserReports();
+  }
+  async function loadRoomReports() {
+      const list = document.getElementById('reportsList');
+      list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">Loading…</div>';
+      try {
+          const r = await apiFetch('/api/reports');
+          if (!r.ok) { list.innerHTML = '<div style="padding:20px;color:#a44;">Access denied</div>'; return; }
+          const reports = await r.json();
+          if (!reports.length) { list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">No room reports yet.</div>'; return; }
+          list.innerHTML = '';
+          reports.forEach(rep => {
+              const div = document.createElement('div');
+              div.className = 'report-item' + (rep.resolved ? ' resolved' : '');
+              div.innerHTML = `
+                  <div class="report-item-top">
+                      <span class="report-room-code">${esc(rep.room_code)}</span>
+                      <span class="report-by">by ${esc(rep.reporter_username)} · ${new Date(rep.created_at).toLocaleString()}</span>
+                      ${rep.resolved ? '<span style="color:#4a4;font-size:12px;">✔ Resolved</span>' : ''}
+                  </div>
+                  <div class="report-reason">${esc(rep.reason)}</div>
+                  ${!rep.resolved ? `<div class="report-actions">
+                      <button class="btn-resolve" onclick="resolveReport(${rep.id})">✔ Resolve</button>
+                      <button class="btn-del-room" onclick="staffDeleteRoom('${esc(rep.room_code)}', ${rep.id})">🗑 Delete Room</button>
+                  </div>` : ''}
+              `;
+              list.appendChild(div);
+          });
+      } catch(e) { list.innerHTML = '<div style="padding:20px;color:#a44;">Error loading reports.</div>'; }
+  }
+  async function loadUserReports() {
+      const list = document.getElementById('reportsList');
+      list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">Loading…</div>';
+      try {
+          const r = await apiFetch('/api/user-reports');
+          if (!r.ok) { list.innerHTML = '<div style="padding:20px;color:#a44;">Access denied</div>'; return; }
+          const reports = await r.json();
+          if (!reports.length) { list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">No user reports yet.</div>'; return; }
+          list.innerHTML = '';
+          reports.forEach(rep => {
+              const div = document.createElement('div');
+              div.className = 'report-item' + (rep.resolved ? ' resolved' : '');
+              div.innerHTML = `
+                  <div class="report-item-top">
+                      <span class="report-room-code" style="background:#1a0a1a;border-color:#434;color:#f9aff9;">👤 ${esc(rep.reported_username)}</span>
+                      <span class="report-by">by ${esc(rep.reporter_username)} · ${new Date(rep.created_at).toLocaleString()}</span>
+                      ${rep.resolved ? '<span style="color:#4a4;font-size:12px;">✔ Resolved</span>' : ''}
+                  </div>
+                  <div class="report-reason">${esc(rep.reason)}</div>
+                  ${!rep.resolved ? `<div class="report-actions">
+                      <button class="btn-resolve" onclick="resolveUserReport(${rep.id})">✔ Resolve</button>
+                      <button class="btn-del-room" onclick="staffDeleteAccount('${esc(rep.reported_username)}', ${rep.id})">🗑 Delete Account</button>
+                  </div>` : ''}
+              `;
+              list.appendChild(div);
+          });
+      } catch(e) { list.innerHTML = '<div style="padding:20px;color:#a44;">Error loading reports.</div>'; }
+  }
+  async function resolveReport(reportId) {
+      try {
+          await apiFetch(`/api/reports/${reportId}/resolve`, { method: 'POST' });
+          loadRoomReports();
+      } catch(e) {}
+  }
+  async function resolveUserReport(reportId) {
+      try {
+          await apiFetch(`/api/user-reports/${reportId}/resolve`, { method: 'POST' });
+          loadUserReports();
+      } catch(e) {}
+  }
+  async function staffDeleteRoom(roomCode, reportId) {
+      if (!confirm(`Delete room "${roomCode}"? This cannot be undone.`)) return;
+      try {
+          const r = await apiFetch(`/api/room/${roomCode}`, { method: 'DELETE' });
+          if (r.ok) {
+              if (myRoom === roomCode) appendSystem(`🗑️ Room ${roomCode} deleted by staff.`);
+              if (reportId) await resolveReport(reportId);
+              else loadRoomReports();
+          } else {
+              const d = await r.json();
+              alert('Error: ' + d.error);
+          }
+      } catch(e) { alert('Error deleting room.'); }
+  }
+  async function staffDeleteAccount(username, reportId) {
+      const target = username || dmCurrentUser;
+      if (!target) return;
+      if (!confirm(`Permanently delete account "${target}"? This removes all their messages, DMs, and data.`)) return;
+      try {
+          const r = await apiFetch(`/api/user/${encodeURIComponent(target)}`, { method: 'DELETE' });
+          const d = await r.json();
+          if (!r.ok) { alert('Error: ' + d.error); return; }
+          if (reportId) await resolveUserReport(reportId);
+          else if (username) loadUserReports();
+          // Close DM with deleted user if open
+          if (dmCurrentUser === target) {
+              dmCurrentUser = '';
+              document.getElementById('dmConvoArea').style.display = 'none';
+              document.getElementById('dmPlaceholder').style.display = 'flex';
+              dmConvos = dmConvos.filter(c => c.other_user !== target);
+              renderDMConvoList(dmConvos);
+          }
+          alert(`Account "${target}" has been deleted.`);
+      } catch(e) { alert('Error deleting account.'); }
+  }
+
+  // ── User Report Modal ─────────────────────────────────────────────────────────
+  function openUserReportModal() {
+      if (!dmCurrentUser) return;
+      document.getElementById('userReportTarget').textContent = dmCurrentUser;
+      document.getElementById('userReportReason').value = '';
+      const modal = document.getElementById('userReportModal');
+      modal.style.display = 'flex';
+  }
+  function closeUserReportModal() {
+      document.getElementById('userReportModal').style.display = 'none';
+  }
+  async function submitUserReport() {
+      const reason = document.getElementById('userReportReason').value.trim();
+      if (!reason) return alert('Please enter a reason.');
+      try {
+          const r = await apiFetch(`/api/user/${encodeURIComponent(dmCurrentUser)}/report`, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reason })
+          });
+          const d = await r.json();
+          if (!r.ok) { alert('Error: ' + d.error); return; }
+          closeUserReportModal();
+          alert(`${dmCurrentUser} has been reported. Thank you — staff will review it.`);
+      } catch(e) { alert('Error submitting report.'); }
+  }
+
+  // ── Lightbox ──────────────────────────────────────────────────────────────────
+  function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+  }
+
+  function esc(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Emoji Shortcodes ──────────────────────────────────────────────────────────
+  const EMOJIS = {
+    smile:'😊', grin:'😁', joy:'😂', rofl:'🤣', sob:'😭', cry:'😢',
+    heart:'❤️', hearts:'💕', heartbeat:'💓', heartpulse:'💗', sparkling_heart:'💖',
+    thumbsup:'👍', thumbsdown:'👎', clap:'👏', raised_hands:'🙌', wave:'👋',
+    fire:'🔥', sparkles:'✨', star:'⭐', star2:'🌟', dizzy:'💫',
+    skull:'💀', poop:'💩', eyes:'👀', muscle:'💪', pray:'🙏',
+    ok_hand:'👌', point_right:'👉', point_left:'👈', point_up:'☝️', point_down:'👇',
+    v:'✌️', crossed_fingers:'🤞', metal:'🤘', fist:'✊', punch:'👊',
+    sunglasses:'😎', thinking:'🤔', flushed:'😳', sweat_smile:'😅', unamused:'😒',
+    angry:'😠', rage:'😡', exploding_head:'🤯', scream:'😱', fearful:'😨',
+    cold_sweat:'😰', worried:'😟', pensive:'😔', sleepy:'😪', sleeping:'😴',
+    yawning_face:'🥱', nauseated:'🤢', sick:'🤧', woozy:'🥴', drunk:'🥴',
+    partying:'🥳', cowboy:'🤠', robot:'🤖', alien:'👽', ghost:'👻',
+    clown:'🤡', devil:'😈', angel:'😇', nerd:'🤓', monocle:'🧐',
+    zipper_mouth:'🤐', shushing:'🤫', lying:'🤥', drooling:'🤤', sneezing:'🤧',
+    hot_face:'🥵', cold_face:'🥶', wink:'😉', kissing:'😘', blush:'😊',
+    innocent:'😇', smiling_imp:'😈', stuck_out_tongue:'😛', stuck_out_tongue_winking_eye:'😜',
+    raised_eyebrow:'🤨', neutral_face:'😐', expressionless:'😑', no_mouth:'😶',
+    100:'💯', tada:'🎉', confetti:'🎊', trophy:'🏆', medal:'🥇',
+    pizza:'🍕', burger:'🍔', fries:'🍟', hotdog:'🌭', taco:'🌮',
+    sushi:'🍣', ramen:'🍜', cake:'🎂', cookie:'🍪', donut:'🍩',
+    coffee:'☕', beer:'🍺', wine:'🍷', champagne:'🍾', cocktail:'🍹',
+    cat:'🐱', dog:'🐶', fox:'🦊', wolf:'🐺', bear:'🐻',
+    panda:'🐼', koala:'🐨', tiger:'🐯', lion:'🦁', frog:'🐸',
+    penguin:'🐧', chicken:'🐔', duck:'🦆', owl:'🦉', snake:'🐍',
+    turtle:'🐢', dragon:'🐉', unicorn:'🦄', horse:'🐴', pig:'🐷',
+    monkey:'🐵', gorilla:'🦍', hamster:'🐹', rabbit:'🐰', mouse:'🐭',
+    sun:'☀️', moon:'🌙', cloud:'☁️', rainbow:'🌈', snowflake:'❄️',
+    lightning:'⚡', zap:'⚡', umbrella:'☂️', ocean:'🌊', earth:'🌍',
+    globe:'🌐', mountain:'⛰️', volcano:'🌋', desert:'🏜️', beach:'🏖️',
+    game:'🎮', joystick:'🕹️', dice:'🎲', chess:'♟️', ball:'⚽',
+    basketball:'🏀', football:'🏈', tennis:'🎾', baseball:'⚾', volleyball:'🏐',
+    sword:'⚔️', shield:'🛡️', bow:'🏹', bomb:'💣', gun:'🔫',
+    knife:'🔪', magic:'🪄', gem:'💎', money:'💰', bag:'💼',
+    lock:'🔒', key:'🔑', bulb:'💡', phone:'📱', computer:'💻',
+    camera:'📷', book:'📚', pencil:'✏️', art:'🎨', music:'🎵',
+    headphones:'🎧', guitar:'🎸', piano:'🎹', trumpet:'🎺', drum:'🥁',
+    rocket:'🚀', car:'🚗', plane:'✈️', ship:'🚢', train:'🚂',
+    bicycle:'🚲', helicopter:'🚁', satellite:'🛸', earth_africa:'🌍',
+    no_entry:'🚫', warning:'⚠️', check:'✅', x:'❌', question:'❓',
+    exclamation:'❗', recycle:'♻️', sos:'🆘', new:'🆕', free:'🆓',
+    up:'🆙', cool:'🆒', ok:'🆗', plus:'➕', minus:'➖', multiplication:'✖️',
+    white_check_mark:'✅', ballot_box_with_check:'☑️', radio_button:'🔘',
+    mute:'🔇', loud:'🔊', mega:'📣', bell:'🔔', no_bell:'🔕',
+    '+1':'👍', '-1':'👎', laugh:'😂', lol:'😂', haha:'😂',
+    smh:'🤦', facepalm:'🤦', shrug:'🤷', man_shrugging:'🤷', woman_shrugging:'🤷',
+    bruh:'😐', based:'😎', gg:'🎮', rip:'💀', oof:'😬',
+    pls:'🙏', ez:'😏', ngl:'👀', fr:'💯', loafyen:'🐐',
+    clown_face:'🤡', pepega:'🐸', poggers:'😮', pog:'😲', kekw:'😂',
+    monkas:'😰', omegalul:'😂', brain:'🧠', feelsbad:'😢', feelsgood:'😊',
+    wave_hand:'👋', bye:'👋', hi:'👋', hello:'👋', sus:'👀',
+    amongus:'👾', impostor:'😈', vibe:'😎', chill:'😌', lit:'🔥',
+    slay:'💅', king:'👑', queen:'👑', crown:'👑', boss:'😤',
+    real:'💯', nerd_face:'🤓', big_brain:'🧠', galaxy_brain:'🧠',
+    weary:'😩', tired:'😫', disappointed:'😞', confounded:'😖', persevere:'😣',
+    relieved:'😌', hushed:'😯', open_mouth:'😮', astonished:'😲', frowning:'😦',
+    anguished:'😧', grimacing:'😬', smirk:'😏', triumph:'😤', zzz:'💤',
+    trashgamer:'🤓', ilikehardees:'😡', jasonvorhees:'🔪😧', bestsite:'67',
+    pickle:'🥒', ifoundacat2:'🔎🐱', toickle:'🥒🚽', tangerine:'🍊',
+    anger:'💢', tungtung:'🏏🪵',
+  };
+
+  function parseEmojis(text) {
+      return text.replace(/:([a-zA-Z0-9_+\-]+):/g, (match, name) => {
+          return EMOJIS[name] || match;
+      });
+  }
+
+  // ── Emoji Autocomplete ────────────────────────────────────────────────────────
+  let emojiSelectedIdx = -1;
+
+  document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('messageInput');
+      const suggest = document.getElementById('emojiSuggest');
+      if (!input || !suggest) return;
+
+      input.addEventListener('input', () => updateEmojiSuggest(input, suggest));
+      input.addEventListener('keydown', (e) => handleEmojiKeys(e, input, suggest));
+
+      // Enter key for send — now moved here to avoid conflict
+      input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !suggest.classList.contains('open')) sendMessage();
+      });
+
+      // Close on click outside
+      document.addEventListener('click', (e) => {
+          if (!suggest.contains(e.target) && e.target !== input) {
+              suggest.classList.remove('open');
+              emojiSelectedIdx = -1;
+          }
+      });
+  });
+
+  function getEmojiQuery(input) {
+      const val = input.value;
+      const cursor = input.selectionStart;
+      const before = val.slice(0, cursor);
+      const match = before.match(/:([a-zA-Z0-9_+\-]*)$/);
+      return match ? match[1] : null;
+  }
+
+  function updateEmojiSuggest(input, suggest) {
+      const query = getEmojiQuery(input);
+      if (query === null || query.length === 0) {
+          suggest.classList.remove('open');
+          emojiSelectedIdx = -1;
+          return;
+      }
+      const matches = Object.entries(EMOJIS)
+          .filter(([name]) => name.startsWith(query))
+          .slice(0, 24);
+      if (!matches.length) { suggest.classList.remove('open'); return; }
+
+      suggest.innerHTML = '';
+      emojiSelectedIdx = -1;
+      matches.forEach(([name, emoji], i) => {
+          const chip = document.createElement('div');
+          chip.className = 'emoji-chip';
+          chip.textContent = `${emoji} :${name}:`;
+          chip.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              insertEmoji(input, suggest, name, emoji);
+          });
+          suggest.appendChild(chip);
+      });
+      suggest.classList.add('open');
+  }
+
+  function handleEmojiKeys(e, input, suggest) {
+      if (!suggest.classList.contains('open')) return;
+      const chips = suggest.querySelectorAll('.emoji-chip');
+      if (!chips.length) return;
+
+      if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          emojiSelectedIdx = (emojiSelectedIdx + 1) % chips.length;
+          chips.forEach((c, i) => c.classList.toggle('selected', i === emojiSelectedIdx));
+          chips[emojiSelectedIdx].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          emojiSelectedIdx = (emojiSelectedIdx - 1 + chips.length) % chips.length;
+          chips.forEach((c, i) => c.classList.toggle('selected', i === emojiSelectedIdx));
+          chips[emojiSelectedIdx].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Tab') {
+          e.preventDefault();
+          const selected = chips[emojiSelectedIdx >= 0 ? emojiSelectedIdx : 0];
+          const name = selected.textContent.match(/:([^:]+):$/)?.[1];
+          const emoji = Object.entries(EMOJIS).find(([n]) => n === name)?.[1];
+          if (name && emoji) insertEmoji(input, suggest, name, emoji);
+      } else if (e.key === 'Enter') {
+          if (emojiSelectedIdx >= 0) {
+              e.preventDefault();
+              const selected = chips[emojiSelectedIdx];
+              const name = selected.textContent.match(/:([^:]+):$/)?.[1];
+              const emoji = Object.entries(EMOJIS).find(([n]) => n === name)?.[1];
+              if (name && emoji) insertEmoji(input, suggest, name, emoji);
+          } else {
+              // No item selected — close suggest and let message send normally
+              suggest.classList.remove('open');
+              emojiSelectedIdx = -1;
+          }
+      } else if (e.key === 'Escape') {
+          suggest.classList.remove('open');
+          emojiSelectedIdx = -1;
+      }
+  }
+
+  function insertEmoji(input, suggest, name, emoji) {
+      const val = input.value;
+      const cursor = input.selectionStart;
+      const before = val.slice(0, cursor);
+      const after = val.slice(cursor);
+      const newBefore = before.replace(/:([a-zA-Z0-9_+\-]*)$/, `:${name}:`);
+      input.value = newBefore + after;
+      const newPos = newBefore.length;
+      input.setSelectionRange(newPos, newPos);
+      suggest.classList.remove('open');
+      emojiSelectedIdx = -1;
+      input.focus();
+  }
+  </script>
+    <h3> please note that some messages can be montored by school wifi so dont be dumb with the site also any photos are uploaded to our severs for moderation if there fine we keep them if not it will be deleted and you could get a ban from main servers (general) and any other public severs this </h3>
+</body>
+</html>
