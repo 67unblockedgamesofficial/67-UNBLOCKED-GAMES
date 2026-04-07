@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
-const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
@@ -22,21 +21,25 @@ const pool = new Pool({
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 // CORS_ORIGIN env var = comma-separated list of allowed origins (e.g. GitHub Pages URL)
-// Leave unset for same-origin / Replit dev (all origins allowed in that case)
-const corsOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
-    : null;
+// Leave unset to allow all origins (local dev / Replit)
+const corsOrigins = (process.env.CORS_ORIGIN || '')
+    .split(',').map(s => s.trim()).filter(Boolean);
 
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || !corsOrigins || corsOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error(`Origin ${origin} not allowed by CORS`));
+// Manual CORS middleware — avoids Express 5 compatibility issues with the cors package
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin) {
+        const allowed = corsOrigins.length === 0 || corsOrigins.includes(origin);
+        if (allowed) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+            res.setHeader('Access-Control-Allow-Credentials', 'true');
+            res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
         }
-    },
-    credentials: true
-}));
+    }
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+});
 
 // ─── Middleware ──────────────────────────────────────────────────────────────
 app.use(express.json());
@@ -47,8 +50,8 @@ app.use(session({
     cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         // Cross-origin (GitHub Pages → Render): cookies need SameSite=None + Secure
-        sameSite: corsOrigins ? 'none' : 'lax',
-        secure: !!corsOrigins
+        sameSite: corsOrigins.length > 0 ? 'none' : 'lax',
+        secure: corsOrigins.length > 0
     }
 }));
 
