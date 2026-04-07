@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>67 UNBLOCKED GAMES</title>
-  <link rel="icon" type="image/x-icon" href="images/sixsevenlogo.png">
-  <style>
+<title>67 UNBLOCKED GAMES</title>
+<link rel="icon" type="image/x-icon" href="images/sixsevenlogo.png">
+<style>
   body {
       background-color: #000;
       color: #fff;
@@ -64,6 +59,43 @@
       gap: 12px;
       margin-bottom: 30px;
   }
+  .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 40px 0;
+      max-width: 1400px;
+      margin: 0 auto;
+  }
+  .settings-section {
+      background-color: #0a0a0a !important;
+      border: 1px solid #222 !important;
+      padding: 30px !important;
+      border-radius: 12px !important;
+      margin: 20px auto !important;
+      max-width: 600px;
+      text-align: left;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+  .settings-section h2 { text-align: left; margin-bottom: 15px; }
+  .settings-section p { text-align: left; margin-bottom: 20px; }
+  .game-btn {
+      height: 180px !important;
+      width: 100% !important;
+      margin: 0 !important;
+      border: 3px solid #222 !important;
+      border-radius: 16px !important;
+      filter: grayscale(1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background-color: #000;
+  }
+  .game-btn:hover {
+      filter: grayscale(0);
+      border-color: #fff !important;
+      transform: scale(1.05) translateY(-8px);
+      box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
+      z-index: 10;
+  }
   .discord-btn {
       max-width: 800px;
       margin: 20px auto;
@@ -80,28 +112,31 @@
       margin: 20px 0;
   }
   </style>
-</head>
-<body>
-  <div class="nav-container">
-    <button onclick="window.location.href='games.html';">GAMES</button>
-    <button onclick="window.location.href='settings.html';">SETTINGS</button>
-    <button onclick="window.location.href='credits.html';">CREDITS</button>
-    <button onclick="window.location.href='movies.html';">MOVIES</button>
-    <button onclick="window.location.href='chat.html';">CHAT</button>
-  </div>
 
-  <hr>
-  <h1>67 UNBLOCKED GAMES</h1>
-  <h2>Home</h2>
+<body style="background-color:black">
+  <head>
+    <!-- HERE BELOW IS BUTTONS -->
+    <div class="nav-container">
+      <button onclick="window.location.href='games.html';">GAMES</button>
+        <button onclick="window.location.href='settings.html';">SETTINGS</button>
+        <button onclick="window.location.href='credits.html';">CREDITS</button>
+        <button onclick="window.location.href='movies.html';">MOVIES</button>
+        <button onclick="window.location.href='chat.html';">CHAT</button>
+    </div>
+    <!-- BUTTONS END HERE -->
+    
+    <hr>
+    <h1>67 UNBLOCKED GAMES</h1>
+    <h2>Home</h2>
+    
+    <script src="script.js"></script>
 
-  <script src="script.js"></script>
-
-  <button onclick="window.open('https://www.example.com');" class="discord-btn">DISCORD SEVER</button>
-
-  <hr>
-
-  <img src="images/sixsevenlogo.gif" style="width: 100%; max-width: 1000px; height: auto; margin: 20px auto; display: block;" alt="67 Unblocked Games logo">
-
-  <h3>all things can and will change in the future</h3>
+    <button onclick="window.open('https://www.example.com');" class="discord-btn">discord sever </button>
+    
+    <hr>
+    
+    <img src="images/sixsevenlogo.gif" style="width: 100%; max-width: 1000px; height: auto; margin: 20px auto; display: block;">
+    
+      <h3>all things can and will change in the future </h3>
+  </head>
 </body>
-</html>

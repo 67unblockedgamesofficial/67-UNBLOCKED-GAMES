@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings – 67 Unblocked Games</title>
-  <link rel="icon" type="image/x-icon" href="images/sixsevenlogo.png">
+<body>
   <style>
   body {
       background-color: #000;
@@ -64,55 +58,93 @@
       gap: 12px;
       margin-bottom: 30px;
   }
+  .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 40px 0;
+      max-width: 1400px;
+      margin: 0 auto;
+  }
   .settings-section {
-      background-color: #0a0a0a;
-      border: 1px solid #222;
-      padding: 30px;
-      border-radius: 12px;
-      margin: 20px auto;
+      background-color: #0a0a0a !important;
+      border: 1px solid #222 !important;
+      padding: 30px !important;
+      border-radius: 12px !important;
+      margin: 20px auto !important;
       max-width: 600px;
       text-align: left;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
   }
   .settings-section h2 { text-align: left; margin-bottom: 15px; }
   .settings-section p { text-align: left; margin-bottom: 20px; }
+  .game-btn {
+      height: 180px !important;
+      width: 100% !important;
+      margin: 0 !important;
+      border: 3px solid #222 !important;
+      border-radius: 16px !important;
+      filter: grayscale(1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background-color: #000;
+  }
+  .game-btn:hover {
+      filter: grayscale(0);
+      border-color: #fff !important;
+      transform: scale(1.05) translateY(-8px);
+      box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
+      z-index: 10;
+  }
+  .discord-btn {
+      max-width: 800px;
+      margin: 20px auto;
+      font-size: 1.2rem;
+      background-color: #5865F2;
+      border: none;
+      width: 100%;
+  }
+  .discord-btn:hover { background-color: #4752c4; color: #fff; }
+  img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin: 20px 0;
+  }
   </style>
-</head>
-<body>
-  <div class="nav-container">
-    <button onclick="window.location.href='index.html';">HOME</button>
-    <button onclick="window.location.href='games.html';">GAMES</button>
-    <button onclick="window.location.href='credits.html';">CREDITS</button>
-    <button onclick="window.location.href='movies.html';">MOVIES</button>
-    <button onclick="window.location.href='chat.html';">CHAT</button>
-  </div>
-
-  <hr>
-  <h1>Settings</h1>
-  <script src="script.js"></script>
-
-  <div class="settings-section">
-    <h2>Data Management</h2>
-    <p>Export your game progress to a file or import a previously saved file.</p>
-    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-      <button onclick="exportData()" style="background-color: #28a745;">Save/Export Data</button>
-      <button onclick="document.getElementById('importFile').click()" style="background-color: #007bff;">Import Data</button>
-      <input type="file" id="importFile" style="display: none;" onchange="importData(event)" accept=".json">
+  <head>
+    <div class="nav-container">
+      <button onclick="window.location.href='index.html';">HOME</button>
+        <button onclick="window.location.href='games.html';">GAMES</button>
+        <button onclick="window.location.href='credits.html';">CREDITS</button>
+        <button onclick="window.location.href='movies.html';">MOVIES</button>
+        <button onclick="window.location.href='chat.html';">CHAT</button>
     </div>
-    <p id="statusMessage" style="display: none; text-align: center; margin-top: 10px;"></p>
-  </div>
+    
+    <hr>
+    <h1>Settings</h1>
+    <script src="script.js"></script>
 
-  <h2>some games do not support save file like minecraft believe it or not</h2>
-  <h3>we will soon get a list of games that dont save</h3>
-
-  <div class="settings-section">
-    <h2>Tab Cloaker</h2>
-    <p>Change the tab title and icon to look like Schoology.</p>
-    <div style="display: flex; justify-content: center;">
-      <button id="cloakButton" onclick="toggleCloak()" style="background-color: #6c757d;">Enable Cloak</button>
+    <div class="settings-section">
+      <h2>Data Management</h2>
+      <p>Export your game progress to a file or import a previously saved file.</p>
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button onclick="exportData()" style="background-color: #28a745;">Save/Export Data</button>
+        <button onclick="document.getElementById('importFile').click()" style="background-color: #007bff;">Import Data</button>
+        <input type="file" id="importFile" style="display: none;" onchange="importData(event)" accept=".json">
+      </div>
+      <p id="statusMessage" style="display: none; text-align: center; margin-top: 10px;"></p>
     </div>
-  </div>
+      <h2> some games do not support save file like mincraft belive it or not </h2>
+      <h3> we will soon get a list of games that dont save </h3>
 
-  <h2>as of right now tab cloak does not work on games</h2>
+    <div class="settings-section">
+      <h2>Tab Cloaker</h2>
+      <p>Change the tab title and icon to look like Schoology.</p>
+      <div style="display: flex; justify-content: center;">
+        <button id="cloakButton" onclick="toggleCloak()" style="background-color: #6c757d;">Enable Cloak</button>
+      </div>
+    </div>
+      <h2> as of right now tab cloak dose not work on games </h2>
+
+  </head>
 </body>
-</html>

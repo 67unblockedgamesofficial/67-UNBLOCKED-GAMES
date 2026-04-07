@@ -19,40 +19,13 @@ const pool = new Pool({
         ? false : { rejectUnauthorized: false }
 });
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
-// CORS_ORIGIN env var = comma-separated list of allowed origins (e.g. GitHub Pages URL)
-// Leave unset to allow all origins (local dev / Replit)
-const corsOrigins = (process.env.CORS_ORIGIN || '')
-    .split(',').map(s => s.trim()).filter(Boolean);
-
-// Manual CORS middleware — avoids Express 5 compatibility issues with the cors package
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (origin) {
-        const allowed = corsOrigins.length === 0 || corsOrigins.includes(origin);
-        if (allowed) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-            res.setHeader('Access-Control-Allow-Credentials', 'true');
-            res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-        }
-    }
-    if (req.method === 'OPTIONS') return res.sendStatus(204);
-    next();
-});
-
 // ─── Middleware ──────────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET || 'sixseven-secret-key-2024',
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        // Cross-origin (GitHub Pages → Render): cookies need SameSite=None + Secure
-        sameSite: corsOrigins.length > 0 ? 'none' : 'lax',
-        secure: corsOrigins.length > 0
-    }
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }
 }));
 
 // Serve uploads and static files

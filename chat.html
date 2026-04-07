@@ -484,19 +484,6 @@
   <h3>Log in, create a room, and chat in real time</h3>
   <hr>
 
-  <!-- ─── No-Server Overlay (shown on GitHub Pages / static hosting) ─── -->
-  <div id="noServerOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:30px;text-align:center;">
-    <div style="font-size:48px;">💬</div>
-    <h2 style="margin:0;font-size:1.8rem;">Chat Requires a Server</h2>
-    <p style="color:#888;max-width:480px;margin:0;font-size:15px;line-height:1.6;">
-      The chat system uses a real-time backend (WebSocket + database) that can't run on GitHub Pages.
-      To use chat, you need to visit the full hosted version of this site.
-    </p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-      <button onclick="window.location.href='index.html'" style="background:#111;border:1px solid #333;color:#fff;padding:12px 22px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">← Back to Home</button>
-    </div>
-  </div>
-
   <!-- ─── Auth Screen ─────────────────────────────────────── -->
   <div id="authScreen">
     <div class="auth-tabs">
@@ -691,18 +678,8 @@
     <img id="lightboxImg" src="" alt="media">
   </div>
 
-  <script src="chat-config.js"></script>
   <script src="script.js"></script>
   <script>
-  // ── Backend URL config (set via chat-config.js for GitHub Pages) ──────────────
-  const BACKEND = (window.BACKEND_URL || '').replace(/\/$/, '');
-
-  // Drop-in fetch wrapper: prepends BACKEND and adds credentials for cross-origin
-  function apiFetch(path, options = {}) {
-      if (BACKEND) options = { credentials: 'include', ...options };
-      return fetch(BACKEND + path, options);
-  }
-
   let ws = null;
   let presenceWs = null;
   let myUsername = '';
@@ -732,7 +709,7 @@
       const password = document.getElementById('loginPass').value;
       if (!username || !password) return showAuthErr('loginErr', 'Fill in all fields.');
       try {
-          const r = await apiFetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
+          const r = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
           const d = await r.json();
           if (!r.ok) return showAuthErr('loginErr', d.error);
           enterLobby(d.username);
@@ -746,7 +723,7 @@
       if (!username || !password || !confirm) return showAuthErr('registerErr', 'Fill in all fields.');
       if (password !== confirm) return showAuthErr('registerErr', 'Passwords do not match.');
       try {
-          const r = await apiFetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
+          const r = await fetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
           const d = await r.json();
           if (!r.ok) return showAuthErr('registerErr', d.error);
           enterLobby(d.username);
@@ -754,7 +731,7 @@
   }
 
   async function doLogout() {
-      await apiFetch('/api/logout', { method: 'POST' });
+      await fetch('/api/logout', { method: 'POST' });
       myUsername = '';
       if (presenceWs) { presenceWs.close(); presenceWs = null; }
       document.getElementById('lobbyActions').classList.remove('visible');
@@ -778,7 +755,7 @@
               badge.style.display = 'inline-block';
           }
       });
-      apiFetch('/api/staff').then(r => r.json()).then(list => {
+      fetch('/api/staff').then(r => r.json()).then(list => {
           staffSet = new Set(list);
           amIStaff = list.includes(myUsername);
           if (amIStaff) document.getElementById('staffReportsBtn').style.display = 'flex';
@@ -801,21 +778,14 @@
   }
 
   // Check if already logged in on page load
-  // Also detects if this page is running without a backend (e.g. GitHub Pages)
   (async () => {
       try {
-          const r = await apiFetch('/api/me');
-          // If we get any HTTP response the server is up
+          const r = await fetch('/api/me');
           if (r.ok) {
               const d = await r.json();
               enterLobby(d.username);
           }
-          // 401 = not logged in, server IS running — auth screen is already visible, do nothing
-      } catch (e) {
-          // Network error = no backend available (GitHub Pages / static hosting)
-          document.getElementById('noServerOverlay').style.display = 'flex';
-          document.getElementById('authScreen').style.display = 'none';
-      }
+      } catch {}
   })();
 
   // ── Lobby ────────────────────────────────────────────────────────────────────
@@ -831,7 +801,7 @@
   async function createRoom() {
       const code = document.getElementById('createRoomInput').value.trim().toUpperCase() || '';
       try {
-          const r = await apiFetch('/api/create-room', {
+          const r = await fetch('/api/create-room', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ roomCode: code })
@@ -850,10 +820,6 @@
 
   // ── WebSocket ─────────────────────────────────────────────────────────────────
   function getWsUrl() {
-      if (BACKEND) {
-          // Convert https → wss, http → ws
-          return BACKEND.replace(/^https/, 'wss').replace(/^http(?!s)/, 'ws');
-      }
       return `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`;
   }
 
@@ -897,7 +863,7 @@
 
       // Fetch staff list for name coloring
       try {
-          const sr = await apiFetch('/api/staff');
+          const sr = await fetch('/api/staff');
           if (sr.ok) staffSet = new Set(await sr.json());
       } catch {}
 
@@ -985,7 +951,7 @@
       const container = document.getElementById('banListItems');
       container.innerHTML = '<div class="ban-empty">Loading...</div>';
       try {
-          const r = await apiFetch(`/api/room/${myRoom}/bans`);
+          const r = await fetch(`/api/room/${myRoom}/bans`);
           const list = await r.json();
           if (!r.ok) { container.innerHTML = `<div class="ban-empty">${esc(list.error)}</div>`; return; }
           if (list.length === 0) {
@@ -1018,7 +984,7 @@
   // ── Messages ──────────────────────────────────────────────────────────────────
   async function loadHistory(roomCode) {
       try {
-          const r = await apiFetch(`/api/messages/${roomCode}`);
+          const r = await fetch(`/api/messages/${roomCode}`);
           const msgs = await r.json();
           if (msgs.length) {
               appendSystem('— previous messages —');
@@ -1185,7 +1151,7 @@
   // ── Staff Assignment ──────────────────────────────────────────────────────────
   async function assignStaff(username) {
       try {
-          const r = await apiFetch('/api/staff/assign', {
+          const r = await fetch('/api/staff/assign', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ username })
@@ -1222,8 +1188,8 @@
   async function loadDMConversations() {
       try {
           const [convRes, blockRes] = await Promise.all([
-              apiFetch('/api/dm/conversations'),
-              apiFetch('/api/blocks')
+              fetch('/api/dm/conversations'),
+              fetch('/api/blocks')
           ]);
           dmConvos = convRes.ok ? await convRes.json() : [];
           const blocks = blockRes.ok ? await blockRes.json() : [];
@@ -1295,7 +1261,7 @@
       msgBox.innerHTML = '<div style="color:#444;font-size:13px;text-align:center;padding:20px;">Loading…</div>';
 
       try {
-          const r = await apiFetch(`/api/dm/${encodeURIComponent(username)}`);
+          const r = await fetch(`/api/dm/${encodeURIComponent(username)}`);
           if (r.status === 403) {
               const d = await r.json();
               msgBox.innerHTML = `<div style="color:#ff4444;text-align:center;padding:20px;">
@@ -1389,7 +1355,7 @@
       const blocked = dmBlockedSet.has(dmCurrentUser);
       const method  = blocked ? 'DELETE' : 'POST';
       try {
-          const r = await apiFetch(`/api/block/${encodeURIComponent(dmCurrentUser)}`, { method });
+          const r = await fetch(`/api/block/${encodeURIComponent(dmCurrentUser)}`, { method });
           if (r.ok) {
               if (blocked) { dmBlockedSet.delete(dmCurrentUser); }
               else         { dmBlockedSet.add(dmCurrentUser); }
@@ -1434,7 +1400,7 @@
 
       appendSystem('Uploading...');
       try {
-          const r = await apiFetch('/api/upload', { method: 'POST', body: formData });
+          const r = await fetch('/api/upload', { method: 'POST', body: formData });
           const d = await r.json();
           if (!r.ok) return appendSystem('Upload failed: ' + d.error);
           if (ws && ws.readyState === WebSocket.OPEN) {
@@ -1472,7 +1438,7 @@
       const reason = document.getElementById('reportReasonInput').value.trim();
       if (!reason) return appendSystem('Please enter a reason for the report.');
       try {
-          const r = await apiFetch(`/api/room/${myRoom}/report`, {
+          const r = await fetch(`/api/room/${myRoom}/report`, {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ reason })
           });
@@ -1488,7 +1454,7 @@
       if (!myRoom) return;
       if (!confirm(`Delete room "${myRoom}"? This cannot be undone.`)) return;
       try {
-          const r = await apiFetch(`/api/room/${myRoom}`, { method: 'DELETE' });
+          const r = await fetch(`/api/room/${myRoom}`, { method: 'DELETE' });
           const d = await r.json();
           if (!r.ok) { appendSystem('⚠️ ' + d.error); return; }
           appendSystem('🗑️ Room deleted.');
@@ -1534,7 +1500,7 @@
       const list = document.getElementById('reportsList');
       list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">Loading…</div>';
       try {
-          const r = await apiFetch('/api/reports');
+          const r = await fetch('/api/reports');
           if (!r.ok) { list.innerHTML = '<div style="padding:20px;color:#a44;">Access denied</div>'; return; }
           const reports = await r.json();
           if (!reports.length) { list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">No room reports yet.</div>'; return; }
@@ -1562,7 +1528,7 @@
       const list = document.getElementById('reportsList');
       list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">Loading…</div>';
       try {
-          const r = await apiFetch('/api/user-reports');
+          const r = await fetch('/api/user-reports');
           if (!r.ok) { list.innerHTML = '<div style="padding:20px;color:#a44;">Access denied</div>'; return; }
           const reports = await r.json();
           if (!reports.length) { list.innerHTML = '<div style="padding:20px;color:#444;text-align:center;">No user reports yet.</div>'; return; }
@@ -1588,20 +1554,20 @@
   }
   async function resolveReport(reportId) {
       try {
-          await apiFetch(`/api/reports/${reportId}/resolve`, { method: 'POST' });
+          await fetch(`/api/reports/${reportId}/resolve`, { method: 'POST' });
           loadRoomReports();
       } catch(e) {}
   }
   async function resolveUserReport(reportId) {
       try {
-          await apiFetch(`/api/user-reports/${reportId}/resolve`, { method: 'POST' });
+          await fetch(`/api/user-reports/${reportId}/resolve`, { method: 'POST' });
           loadUserReports();
       } catch(e) {}
   }
   async function staffDeleteRoom(roomCode, reportId) {
       if (!confirm(`Delete room "${roomCode}"? This cannot be undone.`)) return;
       try {
-          const r = await apiFetch(`/api/room/${roomCode}`, { method: 'DELETE' });
+          const r = await fetch(`/api/room/${roomCode}`, { method: 'DELETE' });
           if (r.ok) {
               if (myRoom === roomCode) appendSystem(`🗑️ Room ${roomCode} deleted by staff.`);
               if (reportId) await resolveReport(reportId);
@@ -1617,7 +1583,7 @@
       if (!target) return;
       if (!confirm(`Permanently delete account "${target}"? This removes all their messages, DMs, and data.`)) return;
       try {
-          const r = await apiFetch(`/api/user/${encodeURIComponent(target)}`, { method: 'DELETE' });
+          const r = await fetch(`/api/user/${encodeURIComponent(target)}`, { method: 'DELETE' });
           const d = await r.json();
           if (!r.ok) { alert('Error: ' + d.error); return; }
           if (reportId) await resolveUserReport(reportId);
@@ -1649,7 +1615,7 @@
       const reason = document.getElementById('userReportReason').value.trim();
       if (!reason) return alert('Please enter a reason.');
       try {
-          const r = await apiFetch(`/api/user/${encodeURIComponent(dmCurrentUser)}/report`, {
+          const r = await fetch(`/api/user/${encodeURIComponent(dmCurrentUser)}/report`, {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ reason })
           });
