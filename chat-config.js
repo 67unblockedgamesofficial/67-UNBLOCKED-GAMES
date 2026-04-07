@@ -9,4 +9,4 @@
 // LOCAL / REPLIT DEV:
 //   Leave as empty string — the frontend talks to the same server it's served from.
 
-window.BACKEND_URL = '';
+window.BACKEND_URL = 'https://six7-backend.onrender.com';
