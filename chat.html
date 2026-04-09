@@ -112,7 +112,7 @@
   #userBadge strong { color: #fff; }
 
   /* ─── Chat Room ─────────────────────────────────────── */
-  #chatRoom { display: none; max-width: 900px; margin: 0 auto; text-align: left; }
+  #chatRoom { display: none; max-width: 900px; margin: 0 auto; text-align: left; position: relative; }
   #roomHeader {
       display: flex; align-items: center; justify-content: space-between;
       background: #0d0d0d; border: 1px solid #1e1e1e;
@@ -411,6 +411,117 @@
   }
   #uploadBtn:hover { background: #222; border-color: #555; }
 
+  /* ─── Online Count & Room History ──────────────────── */
+  #onlineCount {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: #555; margin-top: 4px;
+  }
+  .online-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; flex-shrink: 0; }
+  .divider-row {
+      display: flex; align-items: center; gap: 10px;
+      color: #555; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+      margin: 18px 0 10px;
+  }
+  .divider-row::before, .divider-row::after {
+      content: ''; flex: 1; border-top: 1px solid #222;
+  }
+  #recentRooms { display: flex; flex-direction: column; gap: 6px; }
+  .recent-room-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 8px;
+      padding: 9px 14px; gap: 10px;
+  }
+  .recent-room-code { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.05em; }
+  .recent-room-time { font-size: 11px; color: #444; flex: 1; text-align: right; }
+  .recent-room-btn {
+      background: #111; border: 1px solid #333; border-radius: 6px;
+      color: #fff; font-size: 12px; font-weight: 600; padding: 5px 12px;
+      cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .recent-room-btn:hover { background: #fff; color: #000; border-color: #fff; }
+  #recentEmpty { color: #444; font-size: 13px; text-align: center; padding: 8px 0; }
+
+  /* ─── Account Settings Modal ───────────────────────── */
+  #acctModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.85); z-index: 9997;
+      align-items: center; justify-content: center;
+  }
+  #acctModal.open { display: flex; }
+  #acctModalBox {
+      background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 14px;
+      padding: 28px; width: 380px; max-width: 92vw;
+      display: flex; flex-direction: column; gap: 18px;
+  }
+  #acctModalBox h3 { margin: 0; color: #fff; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .acct-tabs { display: flex; gap: 8px; }
+  .acct-tab {
+      flex: 1; padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      background: #111; border: 1px solid #333; color: #888; cursor: pointer; text-align: center;
+      transition: all 0.2s;
+  }
+  .acct-tab.active { background: #1a1a1a; border-color: #555; color: #fff; }
+  .acct-panel { display: none; flex-direction: column; gap: 12px; }
+  .acct-panel.active { display: flex; }
+  .acct-panel input {
+      background: #111; border: 1px solid #333; border-radius: 8px;
+      color: #fff; font-size: 14px; padding: 10px 14px; outline: none; width: 100%; box-sizing: border-box;
+  }
+  .acct-panel input:focus { border-color: #555; }
+  .acct-panel label { color: #888; font-size: 12px; margin-bottom: -6px; }
+  #acctMsg { font-size: 13px; min-height: 18px; text-align: center; }
+  #acctMsg.ok  { color: #4ade80; }
+  #acctMsg.err { color: #ff4444; }
+  .acct-note { color: #555; font-size: 12px; text-align: center; }
+
+  /* ─── GIF Button & Picker ──────────────────────────── */
+  #gifBtn {
+      background: #111; border: 1px solid #333; border-radius: 8px;
+      padding: 0 14px; cursor: pointer; font-size: 13px; font-weight: 700;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; height: 47px; color: #fff; letter-spacing: 0.05em;
+      user-select: none;
+  }
+  #gifBtn:hover { background: #222; border-color: #555; }
+  #gifBtn.active { border-color: #fff; color: #fff; background: #1a1a1a; }
+
+  #gifPicker {
+      display: none; position: absolute; bottom: 70px; left: 0; right: 0;
+      background: #0d0d0d; border: 1px solid #222; border-radius: 12px;
+      padding: 12px; z-index: 500; flex-direction: column; gap: 10px;
+      max-height: 340px;
+  }
+  #gifPicker.open { display: flex; }
+  #gifSearch {
+      width: 100%; box-sizing: border-box; background: #111; border: 1px solid #333;
+      border-radius: 8px; color: #fff; font-size: 14px; padding: 10px 14px; outline: none;
+  }
+  #gifSearch:focus { border-color: #555; }
+  .gif-tabs { display: flex; gap: 6px; flex-shrink: 0; }
+  .gif-tab {
+      flex: 1; padding: 7px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      background: #111; border: 1px solid #333; color: #777; cursor: pointer; text-align: center;
+      transition: all 0.15s; user-select: none;
+  }
+  .gif-tab.active { background: #1a1a1a; border-color: #555; color: #fff; }
+  #gifGrid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 6px; overflow-y: auto; flex: 1;
+  }
+  .gif-cell { position: relative; border-radius: 6px; overflow: hidden; background: #1a1a1a; aspect-ratio: 1; }
+  .gif-cell img {
+      width: 100%; height: 100%; object-fit: cover; cursor: pointer; display: block;
+      transition: transform 0.15s, opacity 0.15s;
+  }
+  .gif-cell img:hover { transform: scale(1.04); opacity: 0.85; }
+  .gif-star {
+      position: absolute; top: 4px; right: 4px; font-size: 16px; line-height: 1;
+      cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,.8); transition: transform 0.15s;
+      user-select: none;
+  }
+  .gif-star:hover { transform: scale(1.25); }
+  #gifEmpty { color: #555; font-size: 13px; text-align: center; padding: 20px 0; }
+
   /* ─── Ban List Modal ───────────────────────────────── */
   #banModal {
       display: none; position: fixed; inset: 0;
@@ -477,6 +588,8 @@
     <button onclick="window.location.href='settings.html'">SETTINGS</button>
     <button onclick="window.location.href='credits.html'">CREDITS</button>
     <button onclick="window.location.href='movies.html'">MOVIES</button>
+    <button onclick="window.location.href='chat.html'">CHAT</button>
+      <button onclick="window.location.href='updates.html'">UPDATES</button>
   </div>
 
   <hr>
@@ -513,11 +626,15 @@
       <span>Logged in as <strong id="badgeUser"></strong></span>
       <button class="btn-red" style="margin:0;padding:6px 14px;font-size:12px;" onclick="doLogout()">Logout</button>
     </div>
+    <div id="onlineCount"><span class="online-dot"></span><span id="onlineNum">...</span> online</div>
 
     <div id="lobbyActions">
       <button class="lobby-action-btn" onclick="openDMModal()">
         💬 Direct Messages
         <span class="lobby-unread-badge" id="lobbyDmBadge" style="display:none"></span>
+      </button>
+      <button class="lobby-action-btn" onclick="openAcctModal()">
+        ⚙️ Account Settings
       </button>
       <button class="lobby-action-btn" id="staffReportsBtn" onclick="openReportsModal()" style="display:none;">
         📋 Staff Reports
@@ -529,10 +646,13 @@
     <button class="btn-green btn-full" onclick="createRoom()">+ Create Room</button>
 
     <div class="divider">Join a Room</div>
-    <div class="field"><label>Room Code</label><input type="text" id="joinRoomInput" placeholder="Enter room code..." maxlength="20" onkeydown="if(event.key==='Enter')joinRoom()"></div>
+    <div class="field"><label>Room Code</label><input type="text" id="joinRoomInput" value="GENERAL" maxlength="20" onkeydown="if(event.key==='Enter')joinRoom()"></div>
     <button class="btn-blue btn-full" onclick="joinRoom()">Join Room</button>
 
     <div class="err" id="lobbyErr" style="display:block;"></div>
+
+    <div class="divider-row">Recent Rooms</div>
+    <div id="recentRooms"><div id="recentEmpty">No rooms joined yet.</div></div>
   </div>
 
   <!-- ─── Chat Room ───────────────────────────────────────── -->
@@ -562,6 +682,14 @@
       </div>
     </div>
 
+    <div id="gifPicker">
+      <div class="gif-tabs">
+        <div class="gif-tab active" id="gifTab_search" onclick="switchGifTab('search')">🔍 Search</div>
+        <div class="gif-tab" id="gifTab_fav" onclick="switchGifTab('fav')">⭐ Favorites</div>
+      </div>
+      <input type="text" id="gifSearch" placeholder="Search Tenor GIFs…" oninput="gifSearchDebounce()" autocomplete="off">
+      <div id="gifGrid"><div id="gifEmpty">Search for a GIF above</div></div>
+    </div>
     <div id="replyBar">
       <span class="rbar-info">↩ Replying to <strong id="replyBarUser"></strong>: <span id="replyBarMsg"></span></span>
       <span class="rbar-cancel" onclick="cancelReply()">✕</span>
@@ -570,11 +698,43 @@
       <label id="uploadBtn" title="Upload image or video">📎
         <input type="file" id="fileInput" style="display:none" accept="image/*,video/*" onchange="uploadFile()">
       </label>
+      <div id="gifBtn" onclick="toggleGifPicker()" title="Search GIFs">GIF</div>
       <div id="inputWrapper">
         <div id="emojiSuggest"></div>
         <input type="text" id="messageInput" placeholder="Type a message... (use :emoji: for emojis)" maxlength="500">
       </div>
       <button id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Account Settings Modal -->
+  <div id="acctModal" onclick="if(event.target===this)closeAcctModal()">
+    <div id="acctModalBox">
+      <h3>⚙️ Account Settings</h3>
+      <div class="acct-tabs">
+        <div class="acct-tab active" id="acctTab_user" onclick="switchAcctTab('user')">Change Username</div>
+        <div class="acct-tab"        id="acctTab_pass" onclick="switchAcctTab('pass')">Change Password</div>
+      </div>
+
+      <!-- Change Username -->
+      <div class="acct-panel active" id="acctPanel_user">
+        <label>New Username</label>
+        <input type="text" id="acctNewUsername" placeholder="letters, numbers, underscores" maxlength="30" autocomplete="off">
+        <button class="btn-blue" style="margin:0;" onclick="submitChangeUsername()">Save Username</button>
+      </div>
+
+      <!-- Change Password -->
+      <div class="acct-panel" id="acctPanel_pass">
+        <label>Current Password</label>
+        <input type="password" id="acctCurrPass" placeholder="Your current password" autocomplete="current-password">
+        <label>New Password</label>
+        <input type="password" id="acctNewPass" placeholder="At least 6 characters" autocomplete="new-password">
+        <button class="btn-blue" style="margin:0;" onclick="submitChangePassword()">Save Password</button>
+      </div>
+
+      <div id="acctMsg"></div>
+      <p class="acct-note">You can change your username or password once per week.</p>
+      <button class="btn-red" style="margin:0;width:100%;" onclick="closeAcctModal()">Close</button>
     </div>
   </div>
 
@@ -760,6 +920,53 @@
           amIStaff = list.includes(myUsername);
           if (amIStaff) document.getElementById('staffReportsBtn').style.display = 'flex';
       }).catch(() => {});
+      loadOnlineCount();
+      loadRoomHistory();
+  }
+
+  let onlineCountInterval = null;
+  function loadOnlineCount() {
+      clearInterval(onlineCountInterval);
+      const refresh = () => fetch('/api/online-count').then(r => r.json()).then(d => {
+          document.getElementById('onlineNum').textContent = d.count;
+      }).catch(() => {});
+      refresh();
+      onlineCountInterval = setInterval(refresh, 15000);
+  }
+
+  async function loadRoomHistory() {
+      const container = document.getElementById('recentRooms');
+      try {
+          const r = await fetch('/api/room-history');
+          const d = await r.json();
+          if (!d.rooms || d.rooms.length === 0) {
+              container.innerHTML = '<div id="recentEmpty">No rooms joined yet.</div>';
+              return;
+          }
+          container.innerHTML = d.rooms.map(row => {
+              const ago = timeAgo(new Date(row.last_joined));
+              return `<div class="recent-room-row">
+                  <span class="recent-room-code">${esc(row.room_code)}</span>
+                  <span class="recent-room-time">${ago}</span>
+                  <button class="recent-room-btn" onclick="quickJoin('${esc(row.room_code)}')">Join →</button>
+              </div>`;
+          }).join('');
+      } catch {
+          container.innerHTML = '<div id="recentEmpty">No rooms joined yet.</div>';
+      }
+  }
+
+  function quickJoin(code) {
+      document.getElementById('joinRoomInput').value = code;
+      joinRoom();
+  }
+
+  function timeAgo(date) {
+      const secs = Math.floor((Date.now() - date) / 1000);
+      if (secs < 60) return 'just now';
+      if (secs < 3600) return Math.floor(secs / 60) + 'm ago';
+      if (secs < 86400) return Math.floor(secs / 3600) + 'h ago';
+      return Math.floor(secs / 86400) + 'd ago';
   }
 
   function openPresenceWs() {
@@ -1423,6 +1630,7 @@
       document.getElementById('lobby').style.display = 'block';
       // Re-open presence WS for DM delivery while in lobby
       if (myUsername) openPresenceWs();
+      loadRoomHistory();
   }
 
   // ── Report Room ───────────────────────────────────────────────────────────────
@@ -1821,7 +2029,214 @@
       emojiSelectedIdx = -1;
       input.focus();
   }
+
+  // ── Account Settings Modal ───────────────────────────────────────────────────
+  function openAcctModal() {
+      document.getElementById('acctNewUsername').value = '';
+      document.getElementById('acctCurrPass').value = '';
+      document.getElementById('acctNewPass').value = '';
+      setAcctMsg('', '');
+      document.getElementById('acctModal').classList.add('open');
+  }
+  function closeAcctModal() {
+      document.getElementById('acctModal').classList.remove('open');
+  }
+  function switchAcctTab(tab) {
+      ['user', 'pass'].forEach(function(t) {
+          document.getElementById('acctTab_' + t).classList.toggle('active', t === tab);
+          document.getElementById('acctPanel_' + t).classList.toggle('active', t === tab);
+      });
+      setAcctMsg('', '');
+  }
+  function setAcctMsg(text, type) {
+      const el = document.getElementById('acctMsg');
+      el.textContent = text;
+      el.className = type;
+  }
+  async function submitChangeUsername() {
+      const val = document.getElementById('acctNewUsername').value.trim();
+      if (!val) return setAcctMsg('Please enter a new username.', 'err');
+      setAcctMsg('Saving…', '');
+      try {
+          const r = await fetch('/api/change-username', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ newUsername: val })
+          });
+          const d = await r.json();
+          if (!r.ok) return setAcctMsg(d.error || 'Error.', 'err');
+          myUsername = d.newUsername;
+          document.getElementById('badgeUser').textContent = myUsername;
+          setAcctMsg('Username changed to ' + d.newUsername + '!', 'ok');
+          document.getElementById('acctNewUsername').value = '';
+      } catch(e) { setAcctMsg('Network error.', 'err'); }
+  }
+  async function submitChangePassword() {
+      const curr = document.getElementById('acctCurrPass').value;
+      const next = document.getElementById('acctNewPass').value;
+      if (!curr || !next) return setAcctMsg('Please fill in both fields.', 'err');
+      setAcctMsg('Saving…', '');
+      try {
+          const r = await fetch('/api/change-password', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ currentPassword: curr, newPassword: next })
+          });
+          const d = await r.json();
+          if (!r.ok) return setAcctMsg(d.error || 'Error.', 'err');
+          setAcctMsg('Password updated successfully!', 'ok');
+          document.getElementById('acctCurrPass').value = '';
+          document.getElementById('acctNewPass').value = '';
+      } catch(e) { setAcctMsg('Network error.', 'err'); }
+  }
+
+  // ── GIF Picker ────────────────────────────────────────────────────────────────
+  const TENOR_KEY = 'LIVDSRZULELA';
+  const GIF_FAV_KEY = 'gif_favorites';
+  let gifPickerOpen = false;
+  let gifDebounceTimer = null;
+  let gifCurrentTab = 'search';
+
+  function getGifFavs() {
+      try { return JSON.parse(localStorage.getItem(GIF_FAV_KEY) || '[]'); } catch { return []; }
+  }
+  function saveGifFavs(favs) {
+      localStorage.setItem(GIF_FAV_KEY, JSON.stringify(favs));
+  }
+  function isGifFaved(url) { return getGifFavs().includes(url); }
+  function toggleFavGif(url, starEl) {
+      var favs = getGifFavs();
+      var idx = favs.indexOf(url);
+      if (idx === -1) { favs.push(url); starEl.textContent = '⭐'; }
+      else            { favs.splice(idx, 1); starEl.textContent = '☆'; }
+      saveGifFavs(favs);
+      // If on favorites tab, refresh it live
+      if (gifCurrentTab === 'fav') renderFavorites();
+  }
+
+  function makeGifCell(url) {
+      var cell = document.createElement('div');
+      cell.className = 'gif-cell';
+      var img = document.createElement('img');
+      img.src = url; img.loading = 'lazy';
+      img.onclick = function() { sendGif(url); };
+      var star = document.createElement('span');
+      star.className = 'gif-star';
+      star.textContent = isGifFaved(url) ? '⭐' : '☆';
+      star.onclick = function(e) { e.stopPropagation(); toggleFavGif(url, star); };
+      cell.appendChild(img);
+      cell.appendChild(star);
+      return cell;
+  }
+
+  function switchGifTab(tab) {
+      gifCurrentTab = tab;
+      ['search', 'fav'].forEach(function(t) {
+          document.getElementById('gifTab_' + t).classList.toggle('active', t === tab);
+      });
+      var searchInput = document.getElementById('gifSearch');
+      if (tab === 'search') {
+          searchInput.style.display = 'block';
+          var q = searchInput.value.trim();
+          fetchGifs(q || 'trending');
+      } else {
+          searchInput.style.display = 'none';
+          renderFavorites();
+      }
+  }
+
+  function renderFavorites() {
+      var grid = document.getElementById('gifGrid');
+      var favs = getGifFavs();
+      grid.innerHTML = '';
+      if (!favs.length) {
+          grid.innerHTML = '<div id="gifEmpty">No favorites yet — star a GIF to save it.</div>';
+          return;
+      }
+      favs.slice().reverse().forEach(function(url) {
+          grid.appendChild(makeGifCell(url));
+      });
+  }
+
+  function toggleGifPicker() {
+      gifPickerOpen = !gifPickerOpen;
+      var picker = document.getElementById('gifPicker');
+      var btn    = document.getElementById('gifBtn');
+      if (gifPickerOpen) {
+          picker.classList.add('open');
+          btn.classList.add('active');
+          if (gifCurrentTab === 'search') {
+              document.getElementById('gifSearch').focus();
+              if (!document.getElementById('gifGrid').querySelector('.gif-cell')) {
+                  fetchGifs('trending');
+              }
+          } else {
+              renderFavorites();
+          }
+      } else {
+          picker.classList.remove('open');
+          btn.classList.remove('active');
+      }
+  }
+
+  function closeGifPicker() {
+      gifPickerOpen = false;
+      document.getElementById('gifPicker').classList.remove('open');
+      document.getElementById('gifBtn').classList.remove('active');
+  }
+
+  function gifSearchDebounce() {
+      clearTimeout(gifDebounceTimer);
+      gifDebounceTimer = setTimeout(function() {
+          var q = document.getElementById('gifSearch').value.trim();
+          fetchGifs(q || 'trending');
+      }, 400);
+  }
+
+  async function fetchGifs(query) {
+      var grid = document.getElementById('gifGrid');
+      grid.innerHTML = '<div id="gifEmpty">Loading…</div>';
+      try {
+          var endpoint = query === 'trending'
+              ? 'https://api.tenor.com/v1/trending?key=' + TENOR_KEY + '&limit=24&media_filter=minimal'
+              : 'https://api.tenor.com/v1/search?q=' + encodeURIComponent(query) + '&key=' + TENOR_KEY + '&limit=24&media_filter=minimal';
+          var res  = await fetch(endpoint);
+          var data = await res.json();
+          if (!data.results || !data.results.length) {
+              grid.innerHTML = '<div id="gifEmpty">No GIFs found.</div>';
+              return;
+          }
+          grid.innerHTML = '';
+          data.results.forEach(function(result) {
+              var url = (result.media[0].tinygif || result.media[0].gif || {}).url;
+              if (!url) return;
+              grid.appendChild(makeGifCell(url));
+          });
+      } catch(e) {
+          grid.innerHTML = '<div id="gifEmpty">Failed to load GIFs.</div>';
+      }
+  }
+
+  function sendGif(url) {
+      var target = ws && ws.readyState === WebSocket.OPEN ? ws : null;
+      if (!target) { appendSystem('Not connected to a room.'); return; }
+      target.send(JSON.stringify({ type: 'message', message: '', mediaUrl: url, mediaType: 'image' }));
+      closeGifPicker();
+  }
+
+  // Close picker if user clicks outside
+  document.addEventListener('click', function(e) {
+      if (!gifPickerOpen) return;
+      var picker = document.getElementById('gifPicker');
+      var btn    = document.getElementById('gifBtn');
+      if (!picker.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+          closeGifPicker();
+      }
+  });
   </script>
-    <h3> please note that some messages can be montored by school wifi so dont be dumb with the site also any photos are uploaded to our severs for moderation if there fine we keep them if not it will be deleted and you could get a ban from main servers (general) and any other public severs this </h3>
+    <h3>Please note: some messages can be monitored by school Wi-Fi, so don't be dumb with the site. Any photos uploaded are reviewed for moderation — if they're fine we keep them, if not they will be deleted and you could receive a ban from the main server (General) and any other public servers.</h3>
+<script src="gate.js"></script>
+<script src="announcement.js"></script>
+<script src="particles.js"></script>
 </body>
 </html>

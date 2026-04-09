@@ -4,7 +4,7 @@ const WebSocket = require('ws');
 const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
@@ -102,8 +102,121 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/api/me', async (req, res) => {
     if (!req.session.username) return res.status(401).json({ error: 'Not logged in.' });
-    const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [req.session.username]).catch(() => ({ rows: [] }));
+    const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [req.session.username]).catch(() => ({ rows: [] }));
     res.json({ username: req.session.username, isStaff: staffRes.rows.length > 0 });
+});
+
+// ─── Change Username ───────────────────────────────────────────────────────────
+app.post('/api/change-username', requireAuth, async (req, res) => {
+    const { newUsername } = req.body;
+    const current = req.session.username;
+    if (!newUsername || typeof newUsername !== 'string') return res.status(400).json({ error: 'New username required.' });
+    const clean = newUsername.trim();
+    if (clean.length < 3 || clean.length > 30) return res.status(400).json({ error: 'Username must be 3–30 characters.' });
+    if (!/^[a-zA-Z0-9_]+$/.test(clean)) return res.status(400).json({ error: 'Only letters, numbers, and underscores allowed.' });
+
+    try {
+        const userRes = await pool.query('SELECT last_credential_change FROM users WHERE LOWER(username) = LOWER($1)', [current]);
+        if (!userRes.rows.length) return res.status(404).json({ error: 'User not found.' });
+        const lastChange = userRes.rows[0].last_credential_change;
+        if (lastChange) {
+            const daysSince = (Date.now() - new Date(lastChange).getTime()) / (1000 * 60 * 60 * 24);
+            if (daysSince < 7) {
+                const daysLeft = Math.ceil(7 - daysSince);
+                return res.status(429).json({ error: `You can only change your credentials once a week. Try again in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}.` });
+            }
+        }
+        // Check not taken
+        const taken = await pool.query('SELECT 1 FROM users WHERE LOWER(username) = LOWER($1)', [clean]);
+        if (taken.rows.length) return res.status(409).json({ error: 'That username is already taken.' });
+
+        await pool.query('UPDATE users SET username = $1, last_credential_change = NOW() WHERE LOWER(username) = LOWER($2)', [clean, current]);
+        // Keep staff row in sync (case-insensitive match)
+        await pool.query('UPDATE staff SET username = $1 WHERE LOWER(username) = LOWER($2)', [clean, current]);
+        await pool.query('UPDATE room_owners SET owner_username = $1 WHERE LOWER(owner_username) = LOWER($2)', [clean, current]);
+
+        req.session.username = clean;
+        req.session.save();
+        res.json({ success: true, newUsername: clean });
+    } catch (err) {
+        if (err.code === '23505') return res.status(409).json({ error: 'That username is already taken.' });
+        res.status(500).json({ error: 'Server error.' });
+    }
+});
+
+// ─── Change Password ───────────────────────────────────────────────────────────
+app.post('/api/change-password', requireAuth, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const username = req.session.username;
+    if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Both fields required.' });
+    if (newPassword.length < 6) return res.status(400).json({ error: 'New password must be at least 6 characters.' });
+
+    try {
+        const userRes = await pool.query('SELECT password_hash, last_credential_change FROM users WHERE LOWER(username) = LOWER($1)', [username]);
+        if (!userRes.rows.length) return res.status(404).json({ error: 'User not found.' });
+
+        const lastChange = userRes.rows[0].last_credential_change;
+        if (lastChange) {
+            const daysSince = (Date.now() - new Date(lastChange).getTime()) / (1000 * 60 * 60 * 24);
+            if (daysSince < 7) {
+                const daysLeft = Math.ceil(7 - daysSince);
+                return res.status(429).json({ error: `You can only change your credentials once a week. Try again in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}.` });
+            }
+        }
+
+        const match = await bcrypt.compare(currentPassword, userRes.rows[0].password_hash);
+        if (!match) return res.status(401).json({ error: 'Current password is incorrect.' });
+
+        const hash = await bcrypt.hash(newPassword, 12);
+        await pool.query('UPDATE users SET password_hash = $1, last_credential_change = NOW() WHERE LOWER(username) = LOWER($2)', [hash, username]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error.' });
+    }
+});
+
+// ─── Online Count ─────────────────────────────────────────────────────────────
+app.get('/api/online-count', (req, res) => {
+    res.json({ count: onlineUsers.size });
+});
+
+// ─── Room History ─────────────────────────────────────────────────────────────
+app.get('/api/room-history', requireAuth, async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT room_code, last_joined FROM room_history
+             WHERE username = $1
+             ORDER BY last_joined DESC LIMIT 8`,
+            [req.session.username]
+        );
+        res.json({ rooms: result.rows });
+    } catch (err) { res.status(500).json({ rooms: [] }); }
+});
+
+// ─── Announcement ─────────────────────────────────────────────────────────────
+const ANNOUNCE_PASS = 'lucaslikeshardees8624$';
+const ANNOUNCE_DEFAULT = '📢 Welcome to 67 Unblocked Games!';
+
+app.get('/api/announcement', async (req, res) => {
+    try {
+        const r = await pool.query("SELECT value FROM site_settings WHERE key='announcement'");
+        res.json({ text: r.rows.length ? r.rows[0].value : ANNOUNCE_DEFAULT });
+    } catch(err) { res.json({ text: ANNOUNCE_DEFAULT }); }
+});
+
+app.post('/api/announcement', async (req, res) => {
+    const { password, text } = req.body;
+    if (password !== ANNOUNCE_PASS) return res.status(403).json({ error: 'Wrong password.' });
+    const safe = (text || '').trim().slice(0, 300);
+    if (!safe) return res.status(400).json({ error: 'Text required.' });
+    try {
+        await pool.query(
+            `INSERT INTO site_settings (key, value) VALUES ('announcement', $1)
+             ON CONFLICT (key) DO UPDATE SET value=$1, updated_at=NOW()`,
+            [safe]
+        );
+        res.json({ success: true, text: safe });
+    } catch(err) { console.error(err); res.status(500).json({ error: 'Server error.' }); }
 });
 
 // ─── Staff List ───────────────────────────────────────────────────────────────
@@ -120,7 +233,7 @@ app.post('/api/staff/assign', requireAuth, async (req, res) => {
     const target = (req.body.username || '').trim();
     if (!target) return res.status(400).json({ error: 'No username provided.' });
     try {
-        const callerIsStaff = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const callerIsStaff = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         if (!callerIsStaff.rows.length) return res.status(403).json({ error: 'Only staff can assign staff.' });
         const userExists = await pool.query('SELECT 1 FROM users WHERE username = $1', [target]);
         if (!userExists.rows.length) return res.status(404).json({ error: `User "${target}" does not exist.` });
@@ -305,7 +418,7 @@ app.post('/api/room/:roomCode/report', requireAuth, async (req, res) => {
 app.get('/api/reports', requireAuth, async (req, res) => {
     const caller = req.session.username;
     try {
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         if (!staffRes.rows.length) return res.status(403).json({ error: 'Staff only.' });
         const result = await pool.query(
             `SELECT id, room_code, reporter_username, reason, resolved, created_at
@@ -320,7 +433,7 @@ app.post('/api/reports/:id/resolve', requireAuth, async (req, res) => {
     const caller = req.session.username;
     const id = parseInt(req.params.id, 10);
     try {
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         if (!staffRes.rows.length) return res.status(403).json({ error: 'Staff only.' });
         await pool.query('UPDATE room_reports SET resolved=TRUE WHERE id=$1', [id]);
         res.json({ success: true });
@@ -332,7 +445,7 @@ app.delete('/api/room/:roomCode', requireAuth, async (req, res) => {
     const caller   = req.session.username;
     const roomCode = req.params.roomCode.toUpperCase();
     try {
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         const ownerRes = await pool.query('SELECT owner_username FROM room_owners WHERE room_code = $1', [roomCode]);
         const isOwner  = ownerRes.rows.length && ownerRes.rows[0].owner_username === caller;
         const isStaff  = staffRes.rows.length > 0;
@@ -369,7 +482,7 @@ app.post('/api/user/:username/report', requireAuth, async (req, res) => {
 app.get('/api/user-reports', requireAuth, async (req, res) => {
     const caller = req.session.username;
     try {
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         if (!staffRes.rows.length) return res.status(403).json({ error: 'Staff only.' });
         const result = await pool.query(
             `SELECT id, reported_username, reporter_username, reason, resolved, created_at
@@ -384,7 +497,7 @@ app.post('/api/user-reports/:id/resolve', requireAuth, async (req, res) => {
     const caller = req.session.username;
     const id = parseInt(req.params.id, 10);
     try {
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         if (!staffRes.rows.length) return res.status(403).json({ error: 'Staff only.' });
         await pool.query('UPDATE user_reports SET resolved=TRUE WHERE id=$1', [id]);
         res.json({ success: true });
@@ -396,7 +509,7 @@ app.delete('/api/user/:username', requireAuth, async (req, res) => {
     const caller   = req.session.username;
     const target   = req.params.username.trim().slice(0, 30);
     try {
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         if (!staffRes.rows.length) return res.status(403).json({ error: 'Staff only.' });
         if (target === caller) return res.status(400).json({ error: 'Cannot delete your own account.' });
         const userRes = await pool.query('SELECT 1 FROM users WHERE username=$1', [target]);
@@ -423,7 +536,7 @@ app.delete('/api/message/:messageId', requireAuth, async (req, res) => {
         if (!msgRes.rows.length) return res.status(404).json({ error: 'Message not found.' });
         const msg = msgRes.rows[0];
 
-        const staffRes = await pool.query('SELECT 1 FROM staff WHERE username = $1', [caller]);
+        const staffRes = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [caller]);
         const isStaff  = staffRes.rows.length > 0;
         const isAuthor = msg.username === caller;
         if (!isStaff && !isAuthor) return res.status(403).json({ error: 'Not authorised.' });
@@ -443,13 +556,72 @@ app.get('/:file', (req, res) => {
 // ─── Staff Helper ─────────────────────────────────────────────────────────────
 async function checkIsStaff(username) {
     try {
-        const res = await pool.query('SELECT 1 FROM staff WHERE username = $1', [username]);
+        const res = await pool.query('SELECT 1 FROM staff WHERE LOWER(username) = LOWER($1)', [username]);
         return res.rows.length > 0;
     } catch { return false; }
 }
 
 // ─── DB Init ──────────────────────────────────────────────────────────────────
 async function initDB() {
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+            id            SERIAL PRIMARY KEY,
+            username      VARCHAR(30) UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at    TIMESTAMP DEFAULT NOW()
+        )
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS chat_messages (
+            id                SERIAL PRIMARY KEY,
+            room_code         VARCHAR(20) NOT NULL,
+            username          VARCHAR(30) NOT NULL,
+            message           TEXT,
+            media_url         TEXT,
+            media_type        VARCHAR(20),
+            reply_to_username VARCHAR(30),
+            reply_to_message  TEXT,
+            created_at        TIMESTAMP DEFAULT NOW()
+        )
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS room_owners (
+            room_code      VARCHAR(20) PRIMARY KEY,
+            owner_username VARCHAR(30) NOT NULL,
+            created_at     TIMESTAMP DEFAULT NOW()
+        )
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS room_bans (
+            room_code VARCHAR(20) NOT NULL,
+            username  VARCHAR(30) NOT NULL,
+            PRIMARY KEY (room_code, username)
+        )
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS staff (
+            username    VARCHAR(30) PRIMARY KEY,
+            assigned_by VARCHAR(30),
+            created_at  TIMESTAMP DEFAULT NOW()
+        )
+    `);
+    await pool.query(`
+        INSERT INTO staff (username, assigned_by)
+        VALUES ('Loafyen', 'THATONETRASHGAMER7976offical')
+        ON CONFLICT DO NOTHING
+    `);
+    // Add cooldown column to existing databases
+    await pool.query(`
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS last_credential_change TIMESTAMP
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS room_history (
+            username    VARCHAR(30) NOT NULL,
+            room_code   VARCHAR(20) NOT NULL,
+            last_joined TIMESTAMP DEFAULT NOW(),
+            PRIMARY KEY (username, room_code)
+        )
+    `);
     await pool.query(`
         CREATE TABLE IF NOT EXISTS direct_messages (
             id SERIAL PRIMARY KEY,
@@ -478,6 +650,13 @@ async function initDB() {
             reason           TEXT NOT NULL,
             resolved         BOOLEAN DEFAULT FALSE,
             created_at       TIMESTAMP DEFAULT NOW()
+        )
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS site_settings (
+            key        VARCHAR(50) PRIMARY KEY,
+            value      TEXT NOT NULL,
+            updated_at TIMESTAMP DEFAULT NOW()
         )
     `);
     await pool.query(`
@@ -577,6 +756,14 @@ wss.on('connection', (ws) => {
             // Track online presence for DM delivery
             if (!onlineUsers.has(username)) onlineUsers.set(username, new Set());
             onlineUsers.get(username).add(ws);
+
+            // Record join history
+            pool.query(
+                `INSERT INTO room_history (username, room_code, last_joined)
+                 VALUES ($1, $2, NOW())
+                 ON CONFLICT (username, room_code) DO UPDATE SET last_joined = NOW()`,
+                [username, roomCode]
+            ).catch(() => {});
 
             ws.send(JSON.stringify({
                 type: 'joined',

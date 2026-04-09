@@ -114,15 +114,44 @@
   <head>
     <div class="nav-container">
       <button onclick="window.location.href='index.html';">HOME</button>
-        <button onclick="window.location.href='games.html';">GAMES</button>
-        <button onclick="window.location.href='credits.html';">CREDITS</button>
-        <button onclick="window.location.href='movies.html';">MOVIES</button>
-        <button onclick="window.location.href='chat.html';">CHAT</button>
+      <button onclick="window.location.href='games.html';">GAMES</button>
+      <button onclick="window.location.href='settings.html';">SETTINGS</button>
+      <button onclick="window.location.href='credits.html';">CREDITS</button>
+      <button onclick="window.location.href='movies.html';">MOVIES</button>
+      <button onclick="window.location.href='chat.html';">CHAT</button>
+      <button onclick="window.location.href='updates.html';">UPDATES</button>
     </div>
     
     <hr>
     <h1>Settings</h1>
     <script src="script.js"></script>
+    <script>
+      function updateLowMemUI() {
+        var on = localStorage.getItem('lowMemory') === '1';
+        var btn = document.getElementById('lowMemBtn');
+        var status = document.getElementById('lowMemStatus');
+        btn.textContent = on ? '⚡ Low Memory: ON' : '⚡ Low Memory: OFF';
+        btn.style.backgroundColor = on ? '#28a745' : '#6c757d';
+        status.textContent = on ? 'Background animation is disabled.' : 'Background animation is enabled.';
+        var canvas = document.getElementById('particle-bg');
+        if (on && canvas) canvas.style.display = 'none';
+        if (!on && canvas) canvas.style.display = '';
+      }
+      function toggleLowMemory() {
+        var on = localStorage.getItem('lowMemory') === '1';
+        if (on) {
+          localStorage.removeItem('lowMemory');
+          var canvas = document.getElementById('particle-bg');
+          if (canvas) canvas.style.display = '';
+        } else {
+          localStorage.setItem('lowMemory', '1');
+          var canvas = document.getElementById('particle-bg');
+          if (canvas) canvas.style.display = 'none';
+        }
+        updateLowMemUI();
+      }
+      document.addEventListener('DOMContentLoaded', updateLowMemUI);
+    </script>
 
     <div class="settings-section">
       <h2>Data Management</h2>
@@ -134,17 +163,29 @@
       </div>
       <p id="statusMessage" style="display: none; text-align: center; margin-top: 10px;"></p>
     </div>
-      <h2> some games do not support save file like mincraft belive it or not </h2>
-      <h3> we will soon get a list of games that dont save </h3>
+      <h2>Some games do not support save files, like Minecraft — believe it or not.</h2>
+      <h3>We will soon provide a list of games that don't save.</h3>
+
+    <div class="settings-section">
+      <h2>Low Memory Mode</h2>
+      <p>Disables the background particle animation to reduce lag and CPU usage. Takes effect on all pages immediately.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <button id="lowMemBtn" onclick="toggleLowMemory()" style="min-width:140px;font-weight:700;"></button>
+        <span id="lowMemStatus" style="font-size:13px;color:#888;"></span>
+      </div>
+    </div>
 
     <div class="settings-section">
       <h2>Tab Cloaker</h2>
-      <p>Change the tab title and icon to look like Schoology.</p>
-      <div style="display: flex; justify-content: center;">
-        <button id="cloakButton" onclick="toggleCloak()" style="background-color: #6c757d;">Enable Cloak</button>
+      <p>Click a cloak to activate it. Click again to turn it off.</p>
+      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <button id="cloakBtn_schoology" onclick="selectCloak('schoology')" style="background-color: #6c757d;">Schoology</button>
+        <button id="cloakBtn_iready" onclick="selectCloak('iready')" style="background-color: #6c757d;">i-Ready</button>
       </div>
     </div>
-      <h2> as of right now tab cloak dose not work on games </h2>
 
   </head>
+<script src="gate.js"></script>
+<script src="announcement.js"></script>
+<script src="particles.js"></script>
 </body>

@@ -49,13 +49,19 @@ function showStatus(message, isError = false) {
 }
 
 // Tab Cloaker Logic
-const CLOAK_SETTINGS = {
-    title: 'Home | Schoology',
-    icon: 'https://asset-cdn.schoology.com/sites/all/themes/schoology_theme/favicon.ico'
+const CLOAK_PRESETS = {
+    schoology: {
+        title: 'Home | Schoology',
+        icon: 'https://asset-cdn.schoology.com/sites/all/themes/schoology_theme/favicon.ico'
+    },
+    iready: {
+        title: 'i-Ready',
+        icon: 'https://www.curriculumassociates.com/favicon.ico'
+    }
 };
 
-let originalTitle = document.title;
-let originalIcon = '';
+let originalTitle = '';
+let originalIcon  = '';
 
 function getFavicon() {
     const link = document.querySelector("link[rel~='icon']");
@@ -67,51 +73,73 @@ function setFavicon(url) {
     if (!link) {
         link = document.createElement('link');
         link.rel = 'icon';
-        document.getElementsByTagName('head')[0].appendChild(link);
+        (document.head || document.getElementsByTagName('head')[0] || document.body).appendChild(link);
     }
     link.href = url;
 }
 
-function toggleCloak() {
-    const isCloaked = localStorage.getItem('tabCloaked') === 'true';
-    const newState = !isCloaked;
-    localStorage.setItem('tabCloaked', newState);
-    applyCloak(newState);
+function selectCloak(type) {
+    const current = localStorage.getItem('cloakType');
+    if (current === type) {
+        localStorage.removeItem('cloakType');
+        applyCloak(null);
+    } else {
+        localStorage.setItem('cloakType', type);
+        applyCloak(type);
+    }
+    updateCloakButtons();
 }
 
-function applyCloak(enable) {
-    const button = document.getElementById('cloakButton');
-    if (enable) {
-        if (!originalIcon) originalIcon = getFavicon();
-        document.title = CLOAK_SETTINGS.title;
-        setFavicon(CLOAK_SETTINGS.icon);
-        if (button) {
-            button.textContent = 'Disable Cloak';
-            button.style.backgroundColor = '#dc3545';
-        }
+function applyCloak(type) {
+    if (type && CLOAK_PRESETS[type]) {
+        if (!originalTitle) originalTitle = document.title;
+        if (!originalIcon)  originalIcon  = getFavicon();
+        document.title = CLOAK_PRESETS[type].title;
+        setFavicon(CLOAK_PRESETS[type].icon);
     } else {
-        document.title = originalTitle;
+        document.title = originalTitle || document.title;
         if (originalIcon) setFavicon(originalIcon);
-        if (button) {
-            button.textContent = 'Enable Cloak';
-            button.style.backgroundColor = '#6c757d';
-        }
     }
 }
 
-// Global initialization
+function updateCloakButtons() {
+    const active = localStorage.getItem('cloakType');
+    ['schoology', 'iready'].forEach(function(type) {
+        const btn = document.getElementById('cloakBtn_' + type);
+        if (!btn) return;
+        if (active === type) {
+            btn.style.backgroundColor = '#dc3545';
+            btn.style.color = '#fff';
+        } else {
+            btn.style.backgroundColor = '#6c757d';
+            btn.style.color = '#fff';
+        }
+    });
+}
+
+// Legacy toggle kept for compatibility
+function toggleCloak() { selectCloak('schoology'); }
+
+// Apply cloak on every page load
 if (typeof window.cloakInitDone === 'undefined') {
     window.cloakInitDone = true;
-    (function() {
-        const isCloaked = localStorage.getItem('tabCloaked') === 'true';
-        if (isCloaked) {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => applyCloak(true));
-            } else {
-                applyCloak(true);
-            }
-        }
-    })();
+    function _initCloak() {
+        const type = localStorage.getItem('cloakType');
+        if (!originalTitle) originalTitle = document.title;
+        if (!originalIcon)  originalIcon  = getFavicon();
+        if (type) applyCloak(type);
+        updateCloakButtons();
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', _initCloak);
+    } else {
+        _initCloak();
+    }
+    window.addEventListener('load', function() {
+        const type = localStorage.getItem('cloakType');
+        if (type) applyCloak(type);
+        updateCloakButtons();
+    });
 }
 
 // Search Logic

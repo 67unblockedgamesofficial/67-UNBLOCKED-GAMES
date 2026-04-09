@@ -9,6 +9,12 @@ A full-featured gaming site with a games library, settings, credits, movies, and
 - **Real-time**: WebSocket (ws package)
 - **Database**: PostgreSQL (via DATABASE_URL env var)
 
+## In-Game Overlay
+- `overlay.js` — Injected into all 28 game pages; press **Ctrl+Shift+O** to toggle
+  - **Chat tab**: login → join room → real-time chat (full WebSocket, images supported); draggable panel
+  - **Settings tab**: Tab Cloak toggle (None / Schoology / iReady) applied instantly
+  - Minimizable, closeable, draggable; remembers session (re-checks `/api/me` on open)
+
 ## Key Pages
 - `index.html` — Home/landing page
 - `games.html` — Games grid with live search filter
